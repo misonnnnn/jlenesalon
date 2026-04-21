@@ -249,13 +249,13 @@
 
             <div class="d-flex justify-content-center align-items-center gap-3">
                 <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" style="background-color: #b49d59;">予約する</button>
-                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2">サービスを見る</button>
+                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" id="scrollToServicesBtn">サービスを見る</button>
             </div>
         </div>
     </div>
     
    
-    <div class="first_section section vh-100 w-100 overflow-hidden">
+    <div class="first_section section vh-100 w-100 overflow-hidden" id="whatWeDoSection">
         <div class="container py-5">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="w-100">
@@ -432,6 +432,8 @@
             var $serviceDescription = $("#serviceDetailDescription");
             var $serviceImage = $("#serviceDetailImage");
             var $serviceButton = $("#serviceDetailButton");
+            var $scrollToServicesBtn = $("#scrollToServicesBtn");
+            var $whatWeDoSection = $("#whatWeDoSection");
 
             function moveServiceIndicator($activeTab) {
                 var tabLeft = $activeTab.position().left + (($activeTab.outerWidth() - $activeTab.find(".what_we_do_icon_outer").outerWidth()) / 2);
@@ -463,6 +465,14 @@
             $serviceTabs.on("click", function () {
                 var serviceKey = $(this).data("service");
                 setActiveService(serviceKey);
+            });
+
+            $scrollToServicesBtn.on("click", function () {
+                if ($whatWeDoSection.length) {
+                    $("html, body").animate({
+                        scrollTop: $whatWeDoSection.offset().top
+                    }, 300);
+                }
             });
 
             setActiveService("facial");
