@@ -39,7 +39,10 @@
                     <tbody>
                         @forelse ($menus as $menu)
                             <tr>
-                                <td>{{ $menu->title }}</td>
+                                <td>
+                                    <strong>{{ $menu->title_en ?? $menu->title }}</strong><br>
+                                    <small class="text-muted">{{ $menu->title_ja ?? $menu->title }}</small>
+                                </td>
                                 <td>{{ $menu->duration ?: '-' }}</td>
                                 <td>{{ $menu->price ?: '-' }}</td>
                                 <td>{{ $menu->is_active ? 'Yes' : 'No' }}</td>

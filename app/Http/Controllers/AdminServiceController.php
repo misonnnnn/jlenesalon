@@ -26,6 +26,7 @@ class AdminServiceController extends Controller
     {
         $data = $this->validateService($request);
         $data['slug'] = Str::slug($data['name_en']) . '-' . Str::lower(Str::random(5));
+        $data['excerpt'] = $data['excerpt_ja'];
         $data['icon_image'] = $this->storeImage($request, 'icon_image');
         $data['excerpt_image'] = $this->storeImage($request, 'excerpt_image');
 
@@ -45,6 +46,7 @@ class AdminServiceController extends Controller
         $data['slug'] = $request->filled('slug')
             ? Str::slug((string) $request->string('slug'))
             : $service->slug;
+        $data['excerpt'] = $data['excerpt_ja'];
 
         if ($request->hasFile('icon_image')) {
             $this->deleteImage($service->icon_image);
@@ -75,6 +77,8 @@ class AdminServiceController extends Controller
         return $request->validate([
             'name_en' => ['required', 'string', 'max:255'],
             'name_ja' => ['required', 'string', 'max:255'],
+            'excerpt_en' => ['required', 'string'],
+            'excerpt_ja' => ['required', 'string'],
             'slug' => [
                 'nullable',
                 'string',
@@ -82,7 +86,6 @@ class AdminServiceController extends Controller
                 Rule::notIn(['admin']),
                 Rule::unique('services', 'slug')->ignore($service?->id),
             ],
-            'excerpt' => ['required', 'string'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
             'icon_image' => ['nullable', 'image', 'max:2048'],

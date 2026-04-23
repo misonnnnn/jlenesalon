@@ -26,6 +26,8 @@ class AdminServiceMenuController extends Controller
     {
         $data = $this->validateMenu($request);
         $data['service_id'] = $service->id;
+        $data['title'] = $data['title_ja'];
+        $data['description'] = $data['description_ja'];
         $data['poster_image'] = $this->storeImage($request);
 
         ServiceMenu::create($data);
@@ -45,6 +47,8 @@ class AdminServiceMenuController extends Controller
         abort_unless($menu->service_id === $service->id, 404);
 
         $data = $this->validateMenu($request);
+        $data['title'] = $data['title_ja'];
+        $data['description'] = $data['description_ja'];
         if ($request->hasFile('poster_image')) {
             $this->deleteImage($menu->poster_image);
             $data['poster_image'] = $this->storeImage($request);
@@ -68,8 +72,10 @@ class AdminServiceMenuController extends Controller
     private function validateMenu(Request $request): array
     {
         return $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'title_en' => ['required', 'string', 'max:255'],
+            'title_ja' => ['required', 'string', 'max:255'],
+            'description_en' => ['required', 'string'],
+            'description_ja' => ['required', 'string'],
             'duration' => ['nullable', 'string', 'max:120'],
             'price' => ['nullable', 'string', 'max:120'],
             'sort_order' => ['nullable', 'integer', 'min:0'],

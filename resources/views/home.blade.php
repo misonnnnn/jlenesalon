@@ -94,7 +94,7 @@
                             data-service="{{ $service->slug }}"
                             data-title="{{ $service->name_ja }}"
                             data-sub-title="{{ $service->name_en }}"
-                            data-description="{{ $service->excerpt }}"
+                            data-description="{{ $service->excerpt_ja ?? $service->excerpt }}"
                             data-image="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
                             data-url="{{ route('services.show', $service) }}"
                         >
@@ -116,7 +116,7 @@
                         <h3 id="serviceDetailTitle">{{ $firstService?->name_ja ?? 'SERVICE' }}</h3>
                         <p class="text-muted mb-2" id="serviceDetailSubTitle">{{ $firstService?->name_en ?? '' }}</p>
                         <hr class="w-25" style="color: #b49d59 !important;">
-                        <p id="serviceDetailDescription">{{ $firstService?->excerpt ?? 'No service content yet.' }}</p>
+                        <p id="serviceDetailDescription">{{ $firstService?->excerpt_ja ?? $firstService?->excerpt ?? 'No service content yet.' }}</p>
                         @if ($firstService)
                             <a href="{{ route('services.show', $firstService) }}" class="btn rounded-pill border-white border-2 text-white px-4 py-2 text-decoration-none" style="background-color: #b49d59;" id="serviceDetailButton">Read More</a>
                         @endif

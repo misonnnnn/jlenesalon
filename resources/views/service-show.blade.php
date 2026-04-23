@@ -38,7 +38,7 @@
             <div class="col-md-6">
                 <p class="text-uppercase text-muted mb-1">{{ $service->name_en }}</p>
                 <h1 class="mb-3">{{ $service->name_ja }}</h1>
-                <p class="mb-0">{{ $service->excerpt }}</p>
+                <p class="mb-0">{{ $service->excerpt_ja ?? $service->excerpt }}</p>
             </div>
         </div>
 
@@ -53,8 +53,8 @@
                             <img src="{{ asset($menu->poster_image) }}" class="card-img-top" alt="{{ $menu->title }}" style="max-height: 260px; object-fit: cover;">
                         @endif
                         <div class="card-body">
-                            <h5>{{ $menu->title }}</h5>
-                            <p class="mb-2">{{ $menu->description }}</p>
+                            <h5>{{ $menu->title_ja ?? $menu->title }}</h5>
+                            <p class="mb-2">{{ $menu->description_ja ?? $menu->description }}</p>
                             <p class="mb-0 text-muted">
                                 @if ($menu->duration) Duration: {{ $menu->duration }} @endif
                                 @if ($menu->duration && $menu->price) | @endif

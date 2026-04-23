@@ -12,6 +12,10 @@ class ServiceMenu extends Model
 
     protected $fillable = [
         'service_id',
+        'title_en',
+        'title_ja',
+        'description_en',
+        'description_ja',
         'title',
         'description',
         'duration',

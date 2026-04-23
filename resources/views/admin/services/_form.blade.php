@@ -1,19 +1,37 @@
 @csrf
-<div class="mb-3">
-    <label class="form-label">Service Name (English)</label>
-    <input type="text" name="name_en" class="form-control" value="{{ old('name_en', $service->name_en ?? '') }}" required>
-</div>
-<div class="mb-3">
-    <label class="form-label">Service Name (Japanese)</label>
-    <input type="text" name="name_ja" class="form-control" value="{{ old('name_ja', $service->name_ja ?? '') }}" required>
+<ul class="nav nav-tabs mb-3" id="serviceLanguageTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="service-en-tab" data-bs-toggle="tab" data-bs-target="#service-en-pane" type="button" role="tab">English</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="service-ja-tab" data-bs-toggle="tab" data-bs-target="#service-ja-pane" type="button" role="tab">Japanese</button>
+    </li>
+</ul>
+<div class="tab-content border border-top-0 rounded-bottom p-3 mb-3">
+    <div class="tab-pane fade show active" id="service-en-pane" role="tabpanel">
+        <div class="mb-3">
+            <label class="form-label">Service Name (English)</label>
+            <input type="text" name="name_en" class="form-control" value="{{ old('name_en', $service->name_en ?? '') }}" required>
+        </div>
+        <div class="mb-0">
+            <label class="form-label">Short Description / Excerpt (English)</label>
+            <textarea name="excerpt_en" rows="4" class="form-control" required>{{ old('excerpt_en', $service->excerpt_en ?? $service->excerpt ?? '') }}</textarea>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="service-ja-pane" role="tabpanel">
+        <div class="mb-3">
+            <label class="form-label">Service Name (Japanese)</label>
+            <input type="text" name="name_ja" class="form-control" value="{{ old('name_ja', $service->name_ja ?? '') }}" required>
+        </div>
+        <div class="mb-0">
+            <label class="form-label">Short Description / Excerpt (Japanese)</label>
+            <textarea name="excerpt_ja" rows="4" class="form-control" required>{{ old('excerpt_ja', $service->excerpt_ja ?? $service->excerpt ?? '') }}</textarea>
+        </div>
+    </div>
 </div>
 <div class="mb-3">
     <label class="form-label">Slug (optional)</label>
     <input type="text" name="slug" class="form-control" value="{{ old('slug', $service->slug ?? '') }}">
-</div>
-<div class="mb-3">
-    <label class="form-label">Short Description / Excerpt</label>
-    <textarea name="excerpt" rows="4" class="form-control" required>{{ old('excerpt', $service->excerpt ?? '') }}</textarea>
 </div>
 <div class="row">
     <div class="col-md-6 mb-3">
