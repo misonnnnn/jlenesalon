@@ -8,9 +8,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    
+    <style>
+        .desktop_service_dropdown { position: relative; }
+        .desktop_service_dropdown_menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            background: #201c1c;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            list-style: none;
+            padding: 8px 0;
+            margin: 0;
+            z-index: 1000;
+        }
+        .desktop_service_dropdown:hover .desktop_service_dropdown_menu { display: block; }
+        .desktop_service_dropdown_menu a {
+            color: #fff;
+            padding: 8px 14px;
+            display: block;
+            text-decoration: none;
+        }
+        .desktop_service_dropdown_menu a:hover { background: rgba(255, 255, 255, 0.1); }
+    </style>
 </head>
 <body>
+    @php
+        $firstService = $services->first();
+    @endphp
     <nav class="main-nav position-absolute top-0 start-0 w-100 py-5">
         <h1 class="text-white text-center title_font">Jlene Salon</h1>
         <hr class="text-light-hr mt-5">
@@ -21,8 +47,21 @@
             <div class="sidebar_menu_background d-block d-md-none"></div>
             <ul class="list-unstyled d-flex justify-content-center align-items-center w-100 mobile_menu_active">
                 <h1 class="text-white text-center title_font d-none">Jlene Salon<hr class="p-0 m-0 w-50 mx-auto" style="height: 3px !important; color: #ffffff !important;"></h1>
-                <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">ホーム</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">HOME</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
-                <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">サービス・料金</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">SERVICE & PRICE</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{{ route('home') }}"><p class="text-white p-0 m-0">ホーム</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">HOME</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
+                <li class="nav-item desktop_service_dropdown">
+                    <a class="nav-link text-white" href="#whatWeDoSection"><p class="text-white p-0 m-0">サービス・料金</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">SERVICE & PRICE</p></a>
+                    <ul class="desktop_service_dropdown_menu d-none d-md-block">
+                        @foreach ($services as $service)
+                            <li><a href="{{ route('services.show', $service) }}">{{ $service->name_en }}</a></li>
+                        @endforeach
+                    </ul>
+                    <div class="d-block d-md-none px-3 pb-2">
+                        @foreach ($services as $service)
+                            <a href="{{ route('services.show', $service) }}" class="d-block text-white text-decoration-none small py-1">{{ $service->name_en }}</a>
+                        @endforeach
+                    </div>
+                    <hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto">
+                </li>
                 <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">アクセス</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">ACCESS</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
                 <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">スタッフ</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">STAFF</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
                 <li class="nav-item"><a class="nav-link text-white" href="{{ route('admin.login') }}"><p class="text-white p-0 m-0">管理者ログイン</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">ADMIN LOGIN</p></a></li>
@@ -49,23 +88,38 @@
             <div class="w-100"><p class="fs-6 text-center m-0" style="color: #b49d59 !important;">SERVICES</p><h2 class="fs-1 text-center">What We Do</h2><hr class="text-light-hr w-25 text-center mx-auto"></div>
             <div class="w-100 w-md-50 mx-auto">
                 <div class="d-flex justify-content-between align-items-center service_tabs">
-                    <div class="service_tab_item active" data-service="facial"><div class="what_we_do_icon_outer"><img src="{{ asset('service/facial.png') }}" alt="" class="w-100"></div><p class="text-muted fs-6 text-center m-0 what_we_do_icon_text">FACIAL</p></div>
-                    <div class="service_tab_item" data-service="relaxation"><div class="what_we_do_icon_outer"><img src="{{ asset('service/relaxation.png') }}" alt="" class="w-100"></div><p class="text-muted fs-6 text-center m-0 what_we_do_icon_text">RELAXATION</p></div>
-                    <div class="service_tab_item" data-service="threading"><div class="what_we_do_icon_outer"><img src="{{ asset('service/threading.png') }}" alt="" class="w-100"></div><p class="text-muted fs-6 text-center m-0 what_we_do_icon_text">THREADING</p></div>
-                    <div class="service_tab_item" data-service="nails"><div class="what_we_do_icon_outer"><img src="{{ asset('service/nails.png') }}" alt="" class="w-100"></div><p class="text-muted fs-6 text-center m-0 what_we_do_icon_text">NAILS</p></div>
-                    <div class="service_tab_item" data-service="hair"><div class="what_we_do_icon_outer"><img src="{{ asset('service/hair.png') }}" alt="" class="w-100"></div><p class="text-muted fs-6 text-center m-0 what_we_do_icon_text">HAIR</p></div>
+                    @forelse ($services as $index => $service)
+                        <div
+                            class="service_tab_item {{ $index === 0 ? 'active' : '' }}"
+                            data-service="{{ $service->slug }}"
+                            data-title="{{ $service->name_ja }}"
+                            data-sub-title="{{ $service->name_en }}"
+                            data-description="{{ $service->excerpt }}"
+                            data-image="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
+                            data-url="{{ route('services.show', $service) }}"
+                        >
+                            <div class="what_we_do_icon_outer">
+                                <img src="{{ $service->icon_image ? asset($service->icon_image) : asset('service/facial.png') }}" alt="{{ $service->name_en }}" class="w-100">
+                            </div>
+                            <p class="text-muted fs-6 text-center m-0 what_we_do_icon_text">{{ strtoupper($service->name_en) }}</p>
+                        </div>
+                    @empty
+                        <p class="text-muted mb-0">No services added yet.</p>
+                    @endforelse
                     <div class="service_active_indicator"></div>
                 </div>
             </div>
             <div class="w-75 mx-auto mt-5">
                 <div class="row">
-                    <div class="col-md-7"><div class="shadow border border-white border-3"><img src="{{ asset('bg1.png') }}" alt="" class="w-100" id="serviceDetailImage"></div></div>
+                    <div class="col-md-7"><div class="shadow border border-white border-3"><img src="{{ $firstService?->excerpt_image ? asset($firstService->excerpt_image) : asset('bg1.png') }}" alt="" class="w-100" id="serviceDetailImage"></div></div>
                     <div class="col-md-5">
-                        <h3 id="serviceDetailTitle">FACIAL SERVICE</h3>
-                        <p class="text-muted mb-2" id="serviceDetailSubTitle">FACIAL</p>
+                        <h3 id="serviceDetailTitle">{{ $firstService?->name_ja ?? 'SERVICE' }}</h3>
+                        <p class="text-muted mb-2" id="serviceDetailSubTitle">{{ $firstService?->name_en ?? '' }}</p>
                         <hr class="w-25" style="color: #b49d59 !important;">
-                        <p id="serviceDetailDescription">お肌の状態に合わせた丁寧なフェイシャルケアで、透明感のある健やかな肌へ導きます。日々の疲れをやさしく癒しながら、ハリと潤いを実感いただける人気メニューです。</p>
-                        <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" style="background-color: #b49d59;" id="serviceDetailButton">Read More</button>
+                        <p id="serviceDetailDescription">{{ $firstService?->excerpt ?? 'No service content yet.' }}</p>
+                        @if ($firstService)
+                            <a href="{{ route('services.show', $firstService) }}" class="btn rounded-pill border-white border-2 text-white px-4 py-2 text-decoration-none" style="background-color: #b49d59;" id="serviceDetailButton">Read More</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -94,14 +148,6 @@
             $menu.find("a").on("click", function () { closeSidebar(); });
             $(window).on("resize", function () { if ($(window).width() > mobileBreakpoint) { closeSidebar(); } });
 
-            var serviceData = {
-                facial: { title: "フェイシャルケア", sub_title: "FACIAL", description: "お肌の状態に合わせた丁寧なフェイシャルケアで、透明感のある健やかな肌へ導きます。日々の疲れをやさしく癒しながら、ハリと潤いを実感いただける人気メニューです。", image: "{{ asset('service/main_image/facial.png') }}" },
-                relaxation: { title: "リラックスサービス", sub_title: "RELAXATION", description: "アロマオイルを使った施術でお客様を極上のリラックスへと導きます。アロマの香に包まれながら日々の疲れを解消したい方におすすめです。活力を取り戻したような感覚になります。", image: "{{ asset('service/main_image/relaxation.png') }}" },
-                threading: { title: "スレッディングサービス", sub_title: "THREADING", description: "肌に優しいスレッディング技術で、産毛や不要な毛を丁寧に整えます。顔全体の印象をすっきりと見せ、メイクのノリも良くなる繊細なケアです。", image: "{{ asset('service/main_image/threading.png') }}" },
-                nails: { title: "ネイルサービス", sub_title: "NAILS", description: "トレンド感のあるデザインから上品なシンプルネイルまで、ライフスタイルに合わせてご提案。指先から気分を高める美しい仕上がりをお届けします。", image: "{{ asset('service/main_image/nails.png') }}" },
-                hair: { title: "ヘアサービス", sub_title: "HAIR", description: "髪質や骨格に合わせたカットとケアで、毎日扱いやすいスタイルを実現。ダメージを抑えながら、ツヤとまとまりのあるヘアへ導きます。", image: "{{ asset('service/main_image/hair.png') }}" }
-            };
-
             var $serviceTabs = $(".service_tab_item");
             var $serviceIndicator = $(".service_active_indicator");
             var $serviceTitle = $("#serviceDetailTitle");
@@ -119,17 +165,16 @@
             }
 
             function setActiveService(serviceKey) {
-                var selectedService = serviceData[serviceKey];
-                if (!selectedService) return;
                 var $activeTab = $serviceTabs.filter('[data-service="' + serviceKey + '"]');
+                if (!$activeTab.length) return;
                 $serviceTabs.removeClass("active");
                 $activeTab.addClass("active");
-                $serviceTitle.text(selectedService.title);
-                $serviceSubTitle.text(selectedService.sub_title || "");
-                $serviceDescription.text(selectedService.description);
-                $serviceImage.attr("src", selectedService.image);
-                $serviceImage.attr("alt", selectedService.sub_title);
-                $serviceButton.attr("data-service", serviceKey);
+                $serviceTitle.text($activeTab.data("title") || "");
+                $serviceSubTitle.text($activeTab.data("sub-title") || "");
+                $serviceDescription.text($activeTab.data("description") || "");
+                $serviceImage.attr("src", $activeTab.data("image"));
+                $serviceImage.attr("alt", $activeTab.data("sub-title"));
+                $serviceButton.attr("href", $activeTab.data("url"));
                 moveServiceIndicator($activeTab);
             }
 
@@ -138,7 +183,9 @@
                 if ($whatWeDoSection.length) { $("html, body").animate({ scrollTop: $whatWeDoSection.offset().top }, 300); }
             });
 
-            setActiveService("facial");
+            if ($serviceTabs.length) {
+                setActiveService($serviceTabs.first().data("service"));
+            }
             $(window).on("resize", function () {
                 var $currentActive = $serviceTabs.filter(".active");
                 if ($currentActive.length) { moveServiceIndicator($currentActive); }

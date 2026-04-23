@@ -18,10 +18,14 @@
     </nav>
 
     <div class="container py-4">
+        @if (session('status'))
+            <div class="alert alert-success">{{ session('status') }}</div>
+        @endif
         <div class="card shadow-sm">
             <div class="card-body">
                 <h4>Welcome, {{ auth()->user()->name }}</h4>
-                <p class="mb-0 text-muted">This is the initial dashboard page for admin-only area.</p>
+                <p class="text-muted">Manage salon CMS content from here.</p>
+                <a href="{{ route('admin.services.index') }}" class="btn btn-dark">Manage Services</a>
             </div>
         </div>
     </div>
