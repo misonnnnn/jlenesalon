@@ -8,67 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <style>
-        .desktop_service_dropdown { position: relative; }
-        .desktop_service_dropdown_menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            min-width: 220px;
-            background: #201c1c;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            list-style: none;
-            padding: 8px 0;
-            margin: 0;
-            z-index: 1000;
-        }
-        .desktop_service_dropdown:hover .desktop_service_dropdown_menu { display: block; }
-        .desktop_service_dropdown_menu a {
-            color: #fff;
-            padding: 8px 14px;
-            display: block;
-            text-decoration: none;
-        }
-        .desktop_service_dropdown_menu a:hover { background: rgba(255, 255, 255, 0.1); }
-    </style>
 </head>
 <body>
     @php
         $firstService = $services->first();
     @endphp
-    <nav class="main-nav position-absolute top-0 start-0 w-100 py-5">
-        <h1 class="text-white text-center title_font">Jlene Salon</h1>
-        <hr class="text-light-hr mt-5">
-        <div class="container d-flex justify-content-between align-items-center">
-            <button class="hamburger_btn d-block d-md-none ms-auto mb-3" type="button" aria-label="Open menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <div class="sidebar_menu_background d-block d-md-none"></div>
-            <ul class="list-unstyled d-flex justify-content-center align-items-center w-100 mobile_menu_active">
-                <h1 class="text-white text-center title_font d-none">Jlene Salon<hr class="p-0 m-0 w-50 mx-auto" style="height: 3px !important; color: #ffffff !important;"></h1>
-                <li class="nav-item"><a class="nav-link text-white" href="{{ route('home') }}"><p class="text-white p-0 m-0">ホーム</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">HOME</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
-                <li class="nav-item desktop_service_dropdown">
-                    <a class="nav-link text-white" href="#whatWeDoSection"><p class="text-white p-0 m-0">サービス・料金</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">SERVICE & PRICE</p></a>
-                    <ul class="desktop_service_dropdown_menu d-none d-md-block">
-                        @foreach ($services as $service)
-                            <li><a href="{{ route('services.show', $service) }}">{{ $service->name_en }}</a></li>
-                        @endforeach
-                    </ul>
-                    <div class="d-block d-md-none px-3 pb-2">
-                        @foreach ($services as $service)
-                            <a href="{{ route('services.show', $service) }}" class="d-block text-white text-decoration-none small py-1">{{ $service->name_en }}</a>
-                        @endforeach
-                    </div>
-                    <hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto">
-                </li>
-                <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">アクセス</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">ACCESS</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
-                <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">スタッフ</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">STAFF</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{ route('admin.login') }}"><p class="text-white p-0 m-0">管理者ログイン</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">ADMIN LOGIN</p></a></li>
-                <hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto">
-            </ul>
-        </div>
-    </nav>
+    @include('partials.site-header', ['services' => $services, 'isHomeHeader' => true])
 
     <div class="first_section section vh-100 object-fit-overflow-hidden" style="background-color: #201c1c;">
         <img src="{{ asset('bg1.png') }}" alt="" class="w-100 h-100 position-absolute top-0 start-0" style="object-fit: cover; object-position: center; opacity: 0.3;">

@@ -5,30 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $service->name_en }} | Jlene Salon</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body style="background: #f8f9fa;">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand title_font" href="{{ route('home') }}">Jlene Salon</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Services</a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            @foreach ($services as $item)
-                                <li><a class="dropdown-item" href="{{ route('services.show', $item) }}">{{ $item->name_en }}</a></li>
-                            @endforeach
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('partials.site-header', ['services' => $services, 'isHomeHeader' => false])
 
     <div class="container py-5">
         <div class="row g-4 align-items-center">
@@ -72,5 +54,21 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(function () {
+            var mobileBreakpoint = 768;
+            var $body = $("body");
+            var $menu = $(".mobile_menu_active");
+            var $overlay = $(".sidebar_menu_background");
+            var $toggleBtn = $(".hamburger_btn");
+
+            function closeSidebar() { $body.removeClass("sidebar_open"); }
+
+            $toggleBtn.on("click", function () { $body.toggleClass("sidebar_open"); });
+            $overlay.on("click", function () { closeSidebar(); });
+            $menu.find("a").on("click", function () { closeSidebar(); });
+            $(window).on("resize", function () { if ($(window).width() > mobileBreakpoint) { closeSidebar(); } });
+        });
+    </script>
 </body>
 </html>
