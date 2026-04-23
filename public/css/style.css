@@ -1,0 +1,156 @@
+@font-face {
+    font-family: 'SenjalaraDemoRegular';
+    src: url('../fonts/SenjalaraDemoRegular.ttf') format('truetype');
+}
+
+body {
+    font-family: 'trebuchet ms', sans-serif;
+}
+
+.title_font {
+    font-family: 'SenjalaraDemoRegular';
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.text-light-hr {
+    color: #a1a1a1;
+}
+
+.text-light-muted {
+    color: #ffffff94;
+}
+
+.nav-link {
+    font-size: 1.2rem;
+    color: #a1a1a1;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px #ffffff;
+    transition: all 0.3s ease;
+}
+
+.main-nav {
+    z-index: 9;
+}
+
+.hamburger_btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    color: #fff;
+    border-radius: 6px;
+    padding: 6px 10px;
+    line-height: 1;
+}
+
+.hamburger_btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+}
+
+.what_we_do_icon_outer {
+    height: 80px;
+    width: 80px;
+}
+
+.service_tabs {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.service_tab_item {
+    cursor: pointer;
+}
+
+.service_tab_item img {
+    transition: transform 0.2s ease;
+}
+
+.service_tab_item.active img,
+.service_tab_item:hover img {
+    transform: translateY(-4px);
+}
+
+.service_active_indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 80px;
+    background-color: #b49d59;
+    transition: left 0.25s ease, width 0.25s ease;
+}
+
+@media screen and (max-width: 768px) {
+    .mobile_menu_active {
+        background-color: #201c1c !important;
+        width: 80% !important;
+        height: 100vh !important;
+        display: block !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        padding-top: 50px;
+        border-right: 1px solid #ffffff !important;
+        transform: translateX(-100%);
+        transition: transform 0.35s ease-in-out;
+        z-index: 999;
+    }
+
+    .mobile_menu_active p {
+        text-align: left !important;
+    }
+
+    .mobile_menu_active li {
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    .what_we_do_icon_outer {
+        height: 50px;
+        width: 50px;
+    }
+
+    .service_active_indicator {
+        width: 50px;
+    }
+
+    .what_we_do_icon_text {
+        font-size: 0.8rem !important;
+    }
+
+    .main-nav {
+        z-index: 99 !important;
+    }
+
+    .mobile_menu_active h1 {
+        font-size: 1.5rem !important;
+        display: block !important;
+    }
+
+    .sidebar_menu_background {
+        background-color: rgba(0, 0, 0, 0.5) !important;
+        width: 100% !important;
+        height: 100vh !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease;
+        z-index: 998;
+    }
+
+    body.sidebar_open .mobile_menu_active {
+        transform: translateX(0);
+    }
+
+    body.sidebar_open .sidebar_menu_background {
+        opacity: 1;
+        visibility: visible;
+    }
+}
