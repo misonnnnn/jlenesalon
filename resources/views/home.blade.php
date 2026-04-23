@@ -11,6 +11,8 @@
 </head>
 <body>
     @php
+        $locale = session('site_locale', 'ja');
+        $isJa = $locale === 'ja';
         $firstService = $services->first();
     @endphp
     @include('partials.site-header', ['services' => $services, 'isHomeHeader' => true])
@@ -37,16 +39,16 @@
                         <div
                             class="service_tab_item {{ $index === 0 ? 'active' : '' }}"
                             data-service="{{ $service->slug }}"
-                            data-title="{{ $service->name_ja }}"
-                            data-sub-title="{{ $service->name_en }}"
-                            data-description="{{ $service->excerpt_ja ?? $service->excerpt }}"
+                            data-title="{{ $isJa ? $service->name_ja : $service->name_en }}"
+                            data-sub-title="{{ $isJa ? $service->name_en : $service->name_ja }}"
+                            data-description="{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}"
                             data-image="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
                             data-url="{{ route('services.show', $service) }}"
                         >
                             <div class="what_we_do_icon_outer">
                                 <img src="{{ $service->icon_image ? asset($service->icon_image) : asset('service/facial.png') }}" alt="{{ $service->name_en }}" class="w-100">
                             </div>
-                            <p class="text-muted fs-6 text-center m-0 what_we_do_icon_text">{{ strtoupper($service->name_en) }}</p>
+                            <p class="text-muted fs-6 text-center m-0 what_we_do_icon_text">{{ strtoupper($isJa ? $service->name_ja : $service->name_en) }}</p>
                         </div>
                     @empty
                         <p class="text-muted mb-0">No services added yet.</p>
@@ -58,10 +60,10 @@
                 <div class="row">
                     <div class="col-md-7"><div class="shadow border border-white border-3"><img src="{{ $firstService?->excerpt_image ? asset($firstService->excerpt_image) : asset('bg1.png') }}" alt="" class="w-100" id="serviceDetailImage"></div></div>
                     <div class="col-md-5">
-                        <h3 id="serviceDetailTitle">{{ $firstService?->name_ja ?? 'SERVICE' }}</h3>
-                        <p class="text-muted mb-2" id="serviceDetailSubTitle">{{ $firstService?->name_en ?? '' }}</p>
+                        <h3 id="serviceDetailTitle">{{ $firstService ? ($isJa ? $firstService->name_ja : $firstService->name_en) : 'SERVICE' }}</h3>
+                        <p class="text-muted mb-2" id="serviceDetailSubTitle">{{ $firstService ? ($isJa ? $firstService->name_en : $firstService->name_ja) : '' }}</p>
                         <hr class="w-25" style="color: #b49d59 !important;">
-                        <p id="serviceDetailDescription">{{ $firstService?->excerpt_ja ?? $firstService?->excerpt ?? 'No service content yet.' }}</p>
+                        <p id="serviceDetailDescription">{{ $firstService ? ($isJa ? ($firstService->excerpt_ja ?? $firstService->excerpt) : ($firstService->excerpt_en ?? $firstService->excerpt)) : 'No service content yet.' }}</p>
                         @if ($firstService)
                             <a href="{{ route('services.show', $firstService) }}" class="btn rounded-pill border-white border-2 text-white px-4 py-2 text-decoration-none" style="background-color: #b49d59;" id="serviceDetailButton">Read More</a>
                         @endif

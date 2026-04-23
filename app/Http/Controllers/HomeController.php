@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    private const ALLOWED_LOCALES = ['en', 'ja'];
+
     public function index()
     {
         $services = Service::query()
@@ -30,5 +33,16 @@ class HomeController extends Controller
             ->get();
 
         return view('service-show', compact('service', 'services'));
+    }
+
+    public function setLanguage(Request $request, string $locale)
+    {
+        if (!in_array($locale, self::ALLOWED_LOCALES, true)) {
+            $locale = 'ja';
+        }
+
+        $request->session()->put('site_locale', $locale);
+
+        return redirect()->back();
     }
 }

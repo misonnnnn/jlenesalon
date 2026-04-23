@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/services/{service}', [HomeController::class, 'showService'])->name('services.show');
+Route::get('/language/{locale}', [HomeController::class, 'setLanguage'])->name('language.switch');
 
 Route::prefix('admin')->name('admin.')->middleware('guest')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');

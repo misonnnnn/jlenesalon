@@ -1,9 +1,13 @@
 <!DOCTYPE html>
+@php
+    $locale = session('site_locale', 'ja');
+    $isJa = $locale === 'ja';
+@endphp
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $service->name_en }} | Jlene Salon</title>
+    <title>{{ $isJa ? $service->name_ja : $service->name_en }} | Jlene Salon</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -18,9 +22,9 @@
                 <img src="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}" alt="{{ $service->name_en }}" class="img-fluid rounded shadow-sm">
             </div>
             <div class="col-md-6">
-                <p class="text-uppercase text-muted mb-1">{{ $service->name_en }}</p>
-                <h1 class="mb-3">{{ $service->name_ja }}</h1>
-                <p class="mb-0">{{ $service->excerpt_ja ?? $service->excerpt }}</p>
+                <p class="text-uppercase text-muted mb-1">{{ $isJa ? $service->name_en : $service->name_ja }}</p>
+                <h1 class="mb-3">{{ $isJa ? $service->name_ja : $service->name_en }}</h1>
+                <p class="mb-0">{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}</p>
             </div>
         </div>
 
@@ -35,8 +39,8 @@
                             <img src="{{ asset($menu->poster_image) }}" class="card-img-top" alt="{{ $menu->title }}" style="max-height: 260px; object-fit: cover;">
                         @endif
                         <div class="card-body">
-                            <h5>{{ $menu->title_ja ?? $menu->title }}</h5>
-                            <p class="mb-2">{{ $menu->description_ja ?? $menu->description }}</p>
+                            <h5>{{ $isJa ? ($menu->title_ja ?? $menu->title) : ($menu->title_en ?? $menu->title) }}</h5>
+                            <p class="mb-2">{{ $isJa ? ($menu->description_ja ?? $menu->description) : ($menu->description_en ?? $menu->description) }}</p>
                             <p class="mb-0 text-muted">
                                 @if ($menu->duration) Duration: {{ $menu->duration }} @endif
                                 @if ($menu->duration && $menu->price) | @endif
