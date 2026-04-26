@@ -27,6 +27,7 @@ class StoreBookingRequest extends FormRequest
             'customer_email' => ['required', 'email', 'max:255'],
             'customer_phone' => ['nullable', 'string', 'max:50'],
             'starts_at' => ['required', 'date', 'after:now'],
+            'payment_method' => ['required', Rule::in(['card', 'gcash', 'paypay', 'linepay'])],
             'notes' => ['nullable', 'string', 'max:2000'],
         ];
     }

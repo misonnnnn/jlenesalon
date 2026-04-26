@@ -24,7 +24,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/services/{service}', [HomeController::class, 'showService'])->name('services.show');
 Route::get('/book', [BookingController::class, 'create'])->name('bookings.create');
 Route::post('/book', [BookingController::class, 'store'])->name('bookings.store');
+Route::get('/book/success', [BookingController::class, 'success'])->name('bookings.success');
+Route::get('/book/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
 Route::get('/book/unavailable-slots', [BookingController::class, 'unavailableSlots'])->name('bookings.unavailable-slots');
+Route::post('/stripe/webhook', [BookingController::class, 'webhook'])->name('stripe.webhook');
 Route::get('/language/{locale}', [HomeController::class, 'setLanguage'])->name('language.switch');
 
 Route::prefix('admin')->name('admin.')->middleware('guest')->group(function () {

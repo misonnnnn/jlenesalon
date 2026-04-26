@@ -24,9 +24,10 @@
                                 <th>When</th>
                                 <th>Service / Menu</th>
                                 <th>Customer</th>
-                                <th>Contact</th>
                                 <th>Status</th>
-                                <th>Notes</th>
+                                <th>Payment</th>
+                                <th>Method</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,15 +42,21 @@
                                         <div class="fw-semibold">{{ $svc?->name_en ?? '—' }}</div>
                                         <div class="small admin-muted">{{ $menu?->title_en ?? $menu?->title ?? '—' }}</div>
                                     </td>
-                                    <td>{{ $booking->customer_name }}</td>
-                                    <td>
-                                        <div class="small"><a href="mailto:{{ $booking->customer_email }}">{{ $booking->customer_email }}</a></div>
-                                        @if ($booking->customer_phone)
-                                            <div class="small admin-muted">{{ $booking->customer_phone }}</div>
-                                        @endif
+                                    <td> <strong >{{ ucfirst($booking->customer_name) }}</strong> 
+                                        <div class="small">
+                                            <a href="mailto:{{ $booking->customer_email }}">{{ $booking->customer_email }}</a>
+                                            @if ($booking->customer_phone)
+                                                <div class="small admin-muted">{{ $booking->customer_phone }}</div>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td><span class="badge-soft text-uppercase">{{ $booking->status }}</span></td>
-                                    <td class="small admin-muted" style="max-width: 220px;">{{ Str::limit($booking->notes, 120) }}</td>
+                                    <td><span class="badge-soft text-uppercase">{{ $booking->payment_status ?? 'unpaid' }}</span></td>
+                                    <td><span class="badge-soft text-uppercase">{{ $booking->payment_method ?? 'card' }}</span></td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></a>
+                                        <!-- <a href="#" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a> -->
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -106,7 +113,7 @@
             }
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
+                initialView: 'dayGridMonth',
                 height: 700,
                 allDaySlot: false,
                 nowIndicator: true,

@@ -15,6 +15,10 @@ class Booking extends Model
         'starts_at',
         'notes',
         'status',
+        'payment_method',
+        'payment_status',
+        'stripe_checkout_session_id',
+        'stripe_payment_intent_id',
     ];
 
     protected $casts = [
