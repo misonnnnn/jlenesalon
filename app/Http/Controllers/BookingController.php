@@ -6,7 +6,9 @@ use App\Http\Requests\StoreBookingRequest;
 use App\Models\Booking;
 use App\Models\Service;
 use App\Models\ServiceMenu;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class BookingController extends Controller
 {
@@ -41,5 +43,31 @@ class BookingController extends Controller
         return redirect()
             ->route('bookings.create')
             ->with('status', 'booking_submitted');
+    }
+
+    public function unavailableSlots(Request $request): JsonResponse
+    {
+        $start = $request->query('start')
+            ? Carbon::parse((string) $request->query('start'))
+            : now()->startOfDay();
+        $end = $request->query('end')
+            ? Carbon::parse((string) $request->query('end'))
+            : now()->addMonths(3)->endOfDay();
+
+        $slots = Booking::query()
+            ->whereBetween('starts_at', [$start, $end])
+            ->where('status', '!=', 'cancelled')
+            ->orderBy('starts_at')
+            ->pluck('starts_at')
+            ->map(function ($value) {
+                $date = $value instanceof Carbon ? $value : Carbon::parse($value);
+
+                return $date->format('Y-m-d H:i');
+            })
+            ->values();
+
+        return response()->json([
+            'slots' => $slots,
+        ]);
     }
 }

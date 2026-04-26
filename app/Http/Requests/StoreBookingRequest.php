@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Booking;
 use App\Models\ServiceMenu;
+use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -40,6 +42,24 @@ class StoreBookingRequest extends FormRequest
             $menu = ServiceMenu::query()->with('service')->find($id);
             if (!$menu || !$menu->service || !$menu->service->is_active) {
                 $validator->errors()->add('service_menu_id', __('This service is not available for booking.'));
+            }
+
+            $startsAt = $this->input('starts_at');
+            if (!$startsAt) {
+                return;
+            }
+
+            $slot = Carbon::parse($startsAt)->format('Y-m-d H:i:s');
+            $taken = Booking::query()
+                ->where('starts_at', $slot)
+                ->where('status', '!=', 'cancelled')
+                ->whereHas('menu', function ($query) use ($menu) {
+                    $query->where('service_id', $menu->service_id);
+                })
+                ->exists();
+
+            if ($taken) {
+                $validator->errors()->add('starts_at', __('This date and time is already booked for this service. Please choose another slot.'));
             }
         });
     }

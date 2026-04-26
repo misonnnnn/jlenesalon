@@ -24,6 +24,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/services/{service}', [HomeController::class, 'showService'])->name('services.show');
 Route::get('/book', [BookingController::class, 'create'])->name('bookings.create');
 Route::post('/book', [BookingController::class, 'store'])->name('bookings.store');
+Route::get('/book/unavailable-slots', [BookingController::class, 'unavailableSlots'])->name('bookings.unavailable-slots');
 Route::get('/language/{locale}', [HomeController::class, 'setLanguage'])->name('language.switch');
 
 Route::prefix('admin')->name('admin.')->middleware('guest')->group(function () {
@@ -34,6 +35,7 @@ Route::prefix('admin')->name('admin.')->middleware('guest')->group(function () {
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings');
+    Route::get('/bookings/events', [AdminBookingController::class, 'events'])->name('bookings.events');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     Route::resource('/services', AdminServiceController::class)->except('show');
     Route::get('/services/{service}/menus', [AdminServiceMenuController::class, 'index'])->name('services.menus.index');

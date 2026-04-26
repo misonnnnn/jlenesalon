@@ -197,6 +197,7 @@
             var preselectedMenuId = @json($preselectedMenu ? (int) $preselectedMenu : null);
             var oldMenuId = @json(old('service_menu_id') ? (int) old('service_menu_id') : null);
             var menusByService = @json($menusByService);
+            var bookedSlots = new Set();
 
             function fillMenus(menus) {
 
@@ -232,6 +233,43 @@
                 onServiceChange();
             }
 
+            var bookingPicker = null;
+
+            function toSlotKey(date) {
+                if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+                    return '';
+                }
+                return date.getFullYear() + '-' +
+                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(date.getDate()).padStart(2, '0') + ' ' +
+                    String(date.getHours()).padStart(2, '0') + ':' +
+                    String(date.getMinutes()).padStart(2, '0');
+            }
+
+            function isBookedDate(date) {
+                if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+                    return false;
+                }
+                for (var h = 9; h < 19; h++) {
+                    var d00 = new Date(date.getFullYear(), date.getMonth(), date.getDate(), h, 0, 0, 0);
+                    var d30 = new Date(date.getFullYear(), date.getMonth(), date.getDate(), h, 30, 0, 0);
+                    if (!bookedSlots.has(toSlotKey(d00)) || !bookedSlots.has(toSlotKey(d30))) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function loadUnavailableSlots(start, end) {
+                return $.getJSON(@json(route('bookings.unavailable-slots')), { start: start, end: end })
+                    .done(function (response) {
+                        bookedSlots = new Set((response && response.slots) || []);
+                        if (bookingPicker) {
+                            bookingPicker.redraw();
+                        }
+                    });
+            }
+
             var fpOpts = {
                 enableTime: true,
                 time_24hr: false,
@@ -245,16 +283,46 @@
                 disableMobile: true,
                 disable: [
                     function (date) {
-                        return date.getDay() === 0;
+                        return date.getDay() === 0 || isBookedDate(date);
                     }
-                ]
+                ],
+                onOpen: function (selectedDates, dateStr, instance) {
+                    var viewDate = instance.currentYear && instance.currentMonth >= 0
+                        ? new Date(instance.currentYear, instance.currentMonth, 1)
+                        : new Date();
+                    var start = viewDate.getFullYear() + '-' + String(viewDate.getMonth() + 1).padStart(2, '0') + '-01';
+                    var endDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 0);
+                    var end = endDate.getFullYear() + '-' + String(endDate.getMonth() + 1).padStart(2, '0') + '-' + String(endDate.getDate()).padStart(2, '0') + ' 23:59:59';
+                    loadUnavailableSlots(start, end);
+                },
+                onMonthChange: function (selectedDates, dateStr, instance) {
+                    var start = instance.currentYear + '-' + String(instance.currentMonth + 1).padStart(2, '0') + '-01';
+                    var endDate = new Date(instance.currentYear, instance.currentMonth + 1, 0);
+                    var end = endDate.getFullYear() + '-' + String(endDate.getMonth() + 1).padStart(2, '0') + '-' + String(endDate.getDate()).padStart(2, '0') + ' 23:59:59';
+                    loadUnavailableSlots(start, end);
+                },
+                onChange: function (selectedDates, dateStr, instance) {
+                    if (!selectedDates.length) {
+                        return;
+                    }
+                    var slotKey = toSlotKey(selectedDates[0]);
+                    if (bookedSlots.has(slotKey)) {
+                        instance.clear();
+                        alert(@json($isJa ? 'この日時はすでに予約済みです。別の日時を選択してください。' : 'This slot is already booked. Please choose another date and time.'));
+                    }
+                }
             };
             @if ($isJa)
             if (typeof flatpickr !== "undefined" && flatpickr.l10ns && flatpickr.l10ns.ja) {
                 fpOpts.locale = flatpickr.l10ns.ja;
             }
             @endif
-            flatpickr("#starts_at", fpOpts);
+            bookingPicker = flatpickr("#starts_at", fpOpts);
+            var now = new Date();
+            var currentMonthStart = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-01';
+            var currentMonthEndDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            var currentMonthEnd = currentMonthEndDate.getFullYear() + '-' + String(currentMonthEndDate.getMonth() + 1).padStart(2, '0') + '-' + String(currentMonthEndDate.getDate()).padStart(2, '0') + ' 23:59:59';
+            loadUnavailableSlots(currentMonthStart, currentMonthEnd);
         });
     </script>
 </body>

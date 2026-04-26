@@ -5,6 +5,9 @@
 @section('admin-content')
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="admin-page-title">Bookings</h3>
+        <button class="btn btn-admin-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#bookingCalendarModal">
+            <i class="fa fa-calendar me-1"></i> View Calendar
+        </button>
     </div>
 
     <div class="admin-card">
@@ -58,4 +61,87 @@
             @endif
         </div>
     </div>
+
+    <div class="modal fade" id="bookingCalendarModal" tabindex="-1" aria-labelledby="bookingCalendarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingCalendarModalLabel">Booking Availability Calendar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex gap-3 small mb-2">
+                        <span><span class="badge-soft">Booked</span></span>
+                        <span class="text-muted">Available slots are empty blocks during business hours (Mon-Sat, 09:00-19:00).</span>
+                    </div>
+                    <div id="bookingCalendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('styles')
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+    <style>
+        #bookingCalendar .fc-toolbar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        #bookingCalendar .fc-event {
+            border-radius: 8px;
+            padding: 1px 3px;
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('bookingCalendar');
+            var modalEl = document.getElementById('bookingCalendarModal');
+            if (!calendarEl || !modalEl || typeof FullCalendar === 'undefined') {
+                return;
+            }
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                height: 700,
+                allDaySlot: false,
+                nowIndicator: true,
+                slotMinTime: '09:00:00',
+                slotMaxTime: '19:00:00',
+                slotDuration: '00:30:00',
+                businessHours: {
+                    daysOfWeek: [1, 2, 3, 4, 5, 6],
+                    startTime: '09:00',
+                    endTime: '19:00',
+                },
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: {
+                    url: @json(route('admin.bookings.events')),
+                    method: 'GET',
+                    failure: function () {
+                        alert('Failed to load booking events.');
+                    }
+                },
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                }
+            });
+
+            modalEl.addEventListener('shown.bs.modal', function () {
+                calendar.render();
+                calendar.refetchEvents();
+                calendar.updateSize();
+            });
+        });
+    </script>
+@endpush
