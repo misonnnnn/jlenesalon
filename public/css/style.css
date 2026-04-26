@@ -3,6 +3,10 @@
     src: url('../fonts/SenjalaraDemoRegular.ttf') format('truetype');
 }
 
+html {
+    font-size: 13px;
+}
+
 body {
     font-family: 'trebuchet ms', sans-serif;
 }
