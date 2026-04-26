@@ -24,7 +24,10 @@
             <div class="col-md-6">
                 <p class="text-uppercase text-muted mb-1">{{ $isJa ? $service->name_en : $service->name_ja }}</p>
                 <h1 class="mb-3">{{ $isJa ? $service->name_ja : $service->name_en }}</h1>
-                <p class="mb-0">{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}</p>
+                <p class="mb-3">{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}</p>
+                <a href="{{ route('bookings.create', ['service' => $service->slug]) }}" class="btn rounded-pill px-4 py-2 text-white text-decoration-none" style="background-color: #b49d59;">
+                    {{ $isJa ? 'このサービスを予約' : 'Book this service' }} <i class="fa-regular fa-calendar ms-2"></i>
+                </a>
             </div>
         </div>
 
@@ -41,11 +44,14 @@
                         <div class="card-body">
                             <h5>{{ $isJa ? ($menu->title_ja ?? $menu->title) : ($menu->title_en ?? $menu->title) }}</h5>
                             <p class="mb-2">{{ $isJa ? ($menu->description_ja ?? $menu->description) : ($menu->description_en ?? $menu->description) }}</p>
-                            <p class="mb-0 text-muted">
+                            <p class="mb-3 text-muted">
                                 @if ($menu->duration) Duration: {{ $menu->duration }} @endif
                                 @if ($menu->duration && $menu->price) | @endif
                                 @if ($menu->price) Price: {{ $menu->price }} @endif
                             </p>
+                            <a href="{{ route('bookings.create', ['service' => $service->slug, 'menu' => $menu->id]) }}" class="btn btn-sm rounded-pill text-white text-decoration-none" style="background-color: #b49d59;">
+                                {{ $isJa ? 'このメニューを予約' : 'Book this menu' }}
+                            </a>
                         </div>
                     </div>
                 </div>

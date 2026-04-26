@@ -24,7 +24,7 @@
             <p class="text-white text-center fs-6">{{ $pageDescription[$locale] }}</p>
             <hr class="text-light-hr">
             <div class="d-flex justify-content-center align-items-center gap-3">
-                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" >{{ $pageBookNowButtonText[$locale] }} <i class="fa-regular fa-hand-point-up"></i></button>
+                <a href="{{ route('bookings.create') }}" class="btn rounded-pill border-white border-2 text-white px-4 py-2 text-decoration-none d-inline-flex align-items-center">{{ $pageBookNowButtonText[$locale] }} <i class="fa-regular fa-hand-point-up ms-2"></i></a>
                 <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" id="scrollToServicesBtn">{{ $pageSeeServicesButtonText[$locale] }}</button>
             </div>
         </div>

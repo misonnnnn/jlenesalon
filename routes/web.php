@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\AdminServiceController;
 use App\Http\Controllers\AdminServiceMenuController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/services/{service}', [HomeController::class, 'showService'])->name('services.show');
+Route::get('/book', [BookingController::class, 'create'])->name('bookings.create');
+Route::post('/book', [BookingController::class, 'store'])->name('bookings.store');
 Route::get('/language/{locale}', [HomeController::class, 'setLanguage'])->name('language.switch');
 
 Route::prefix('admin')->name('admin.')->middleware('guest')->group(function () {
@@ -29,7 +33,7 @@ Route::prefix('admin')->name('admin.')->middleware('guest')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/bookings', fn () => view('admin.bookings.index'))->name('bookings');
+    Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     Route::resource('/services', AdminServiceController::class)->except('show');
     Route::get('/services/{service}/menus', [AdminServiceMenuController::class, 'index'])->name('services.menus.index');

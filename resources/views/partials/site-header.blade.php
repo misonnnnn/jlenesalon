@@ -29,6 +29,7 @@
                 </div>
                 <hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto">
             </li>
+            <li class="nav-item"><a class="nav-link text-white" href="{{ route('bookings.create') }}"><p class="text-white p-0 m-0">{{ $isJa ? 'ご予約' : 'Booking' }}</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">BOOK</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
             <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">アクセス</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">ACCESS</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
             <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">スタッフ</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">STAFF</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
             <li class="nav-item language_switch_item px-4 py-2 ms-1">
