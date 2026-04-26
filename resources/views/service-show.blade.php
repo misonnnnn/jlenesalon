@@ -58,8 +58,23 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
     <script>
         $(function () {
+            if (typeof Lenis !== "undefined") {
+                var lenis = new Lenis({
+                    duration: 1.1,
+                    smoothWheel: true,
+                    wheelMultiplier: 1
+                });
+
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+            }
+
             var mobileBreakpoint = 768;
             var $body = $("body");
             var $menu = $(".mobile_menu_active");

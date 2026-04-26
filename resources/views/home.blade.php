@@ -20,12 +20,12 @@
     <div class="first_section section vh-100 object-fit-overflow-hidden" style="background-color: #201c1c;">
         <img src="{{ asset('bg1.png') }}" alt="" class="w-100 h-100 position-absolute top-0 start-0" style="object-fit: cover; object-position: center; opacity: 0.3;">
         <div class="main-content position-absolute top-50 mt-5 w-75 start-50 translate-middle" style="z-index: 10;">
-            <p class="text-white text-center fs-2"><span class="title_font fs-4 ms-2">Jlene Salon </span>へようこそ</p>
-            <p class="text-white text-center fs-6">Jlene Salonでは、美しさはケアから始まると考えています。私たちの専門チームは、リラックスしながら心身をリフレッシュし、最高のあなたを引き出すために設計されたプロフェッショナルなサロンおよびスキンケアサービスをご提供しています。</p>
+            <p class="text-white text-center fs-2">{!! $pageWelcomeMessage[$locale] !!}</p>
+            <p class="text-white text-center fs-6">{{ $pageDescription[$locale] }}</p>
             <hr class="text-light-hr">
             <div class="d-flex justify-content-center align-items-center gap-3">
-                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" style="background-color: #b49d59;">予約する</button>
-                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" id="scrollToServicesBtn">サービスを見る</button>
+                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" style="background-color: #b49d59;">{{ $pageBookNowButtonText[$locale] }}</button>
+                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" id="scrollToServicesBtn">{{ $pageSeeServicesButtonText[$locale] }}</button>
             </div>
         </div>
     </div>
@@ -82,8 +82,24 @@
         </div>
     </footer>
 
+    <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
     <script>
         $(function () {
+            var lenis = null;
+            if (typeof Lenis !== "undefined") {
+                lenis = new Lenis({
+                    duration: 1.1,
+                    smoothWheel: true,
+                    wheelMultiplier: 1
+                });
+
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+            }
+
             var mobileBreakpoint = 768;
             var $body = $("body");
             var $menu = $(".mobile_menu_active");
@@ -127,7 +143,13 @@
 
             $serviceTabs.on("click", function () { setActiveService($(this).data("service")); });
             $scrollToServicesBtn.on("click", function () {
-                if ($whatWeDoSection.length) { $("html, body").animate({ scrollTop: $whatWeDoSection.offset().top }, 300); }
+                if (!$whatWeDoSection.length) return;
+
+                if (lenis) {
+                    lenis.scrollTo($whatWeDoSection[0], { offset: -20, duration: 1 });
+                } else {
+                    $("html, body").animate({ scrollTop: $whatWeDoSection.offset().top }, 300);
+                }
             });
 
             if ($serviceTabs.length) {

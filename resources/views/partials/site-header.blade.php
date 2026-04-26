@@ -4,10 +4,10 @@
     $isJa = $locale === 'ja';
 @endphp
 
-<nav class="main-nav top-0 start-0 w-100 {{ $isHomeHeader ? 'position-absolute py-5' : 'position-relative bg-dark py-3' }}">
+<nav class="main-nav top-0 start-0 w-100 {{ $isHomeHeader ? 'position-absolute pt-4' : 'position-relative bg-dark pt-4' }}">
     <h1 class="text-white text-center title_font mb-0">Jlene Salon</h1>
     <hr class="text-light-hr mt-3">
-    <div class="container d-flex justify-content-between align-items-center">
+    <div class="container d-flex justify-content-between align-items-center  ">
         <button class="hamburger_btn d-block d-md-none ms-auto mb-3" type="button" aria-label="Open menu">
             <i class="fa-solid fa-bars"></i>
         </button>
