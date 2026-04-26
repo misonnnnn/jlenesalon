@@ -29,6 +29,7 @@ Route::prefix('admin')->name('admin.')->middleware('guest')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/bookings', fn () => view('admin.bookings.index'))->name('bookings');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     Route::resource('/services', AdminServiceController::class)->except('show');
     Route::get('/services/{service}/menus', [AdminServiceMenuController::class, 'index'])->name('services.menus.index');

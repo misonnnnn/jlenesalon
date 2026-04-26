@@ -24,7 +24,7 @@
             <p class="text-white text-center fs-6">{{ $pageDescription[$locale] }}</p>
             <hr class="text-light-hr">
             <div class="d-flex justify-content-center align-items-center gap-3">
-                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" style="background-color: #b49d59;">{{ $pageBookNowButtonText[$locale] }}</button>
+                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" >{{ $pageBookNowButtonText[$locale] }} <i class="fa-regular fa-hand-point-up"></i></button>
                 <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" id="scrollToServicesBtn">{{ $pageSeeServicesButtonText[$locale] }}</button>
             </div>
         </div>
@@ -34,21 +34,23 @@
         <div class="container py-5">
             <div class="w-100"><p class="fs-6 text-center m-0" style="color: #b49d59 !important;">SERVICES</p><h2 class="fs-1 text-center">What We Do</h2><hr class="text-light-hr w-25 text-center mx-auto"></div>
             <div class="w-100 w-md-50 mx-auto">
-                <div class="d-flex justify-content-between align-items-center service_tabs">
+                <div class="row service_tabs">
                     @forelse ($services as $index => $service)
-                        <div
-                            class="service_tab_item {{ $index === 0 ? 'active' : '' }}"
-                            data-service="{{ $service->slug }}"
-                            data-title="{{ $isJa ? $service->name_ja : $service->name_en }}"
-                            data-sub-title="{{ $isJa ? $service->name_en : $service->name_ja }}"
-                            data-description="{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}"
-                            data-image="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
-                            data-url="{{ route('services.show', $service) }}"
-                        >
-                            <div class="what_we_do_icon_outer">
-                                <img src="{{ $service->icon_image ? asset($service->icon_image) : asset('service/facial.png') }}" alt="{{ $service->name_en }}" class="w-100">
+                        <div class="col-6 col-sm-6 col-md-4 col-lg-2 mx-auto">
+                            <div
+                                class="service_tab_item {{ $index === 0 ? 'active' : '' }}"
+                                data-service="{{ $service->slug }}"
+                                data-title="{{ $isJa ? $service->name_ja : $service->name_en }}"
+                                data-sub-title="{{ $isJa ? $service->name_en : $service->name_ja }}"
+                                data-description="{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}"
+                                data-image="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
+                                data-url="{{ route('services.show', $service) }}"
+                            >
+                                <div class="what_we_do_icon_outer position-relative start-50 translate-middle  mt-5">
+                                    <img src="{{ $service->icon_image ? asset($service->icon_image) : asset('service/facial.png') }}" alt="{{ $service->name_en }}" class="w-100">
+                                </div>
+                                <p class="text-muted fs-6 text-center m-0 what_we_do_icon_text" style="margin-top: -20px !important; ">{{ strtoupper($isJa ? $service->name_ja : $service->name_en) }}</p>
                             </div>
-                            <p class="text-muted fs-6 text-center m-0 what_we_do_icon_text">{{ strtoupper($isJa ? $service->name_ja : $service->name_en) }}</p>
                         </div>
                     @empty
                         <p class="text-muted mb-0">No services added yet.</p>
