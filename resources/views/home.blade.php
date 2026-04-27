@@ -122,6 +122,10 @@
                 </div>
             </div>
         </div>
+
+        <div class="container">
+            <p class="text-center fs-6 text-muted "><i>Experience personalized treatments designed to relax your mind and enhance your natural beauty. From the moment you arrive, our team is here to give you a calm, luxurious salon experience with results you can feel and see.</i></p>
+        </div>
         
     </div>
 
@@ -184,9 +188,13 @@
             var $scrollToServicesBtn = $("#scrollToServicesBtn");
             var $whatWeDoSection = $("#whatWeDoSection");
             var $introScene = $("#introScene");
+            var $serviceStackWrap = $(".service_stack_slider_wrap");
             var $serviceStackItems = $(".service_stack_item");
             var $serviceStackPrev = $(".service_stack_prev");
             var $serviceStackNext = $(".service_stack_next");
+            var autoSlideTimer = null;
+            var autoSlideDelay = 2000;
+            var isSliderHovered = false;
 
             function moveServiceIndicator($activeTab) {
                 var tabLeft = $activeTab.position().left + (($activeTab.outerWidth() - $activeTab.find(".what_we_do_icon_outer").outerWidth()) / 2);
@@ -227,6 +235,27 @@
                 updateStackSlider(serviceKey);
             }
 
+            function goToNextService() {
+                var currentService = $serviceTabs.filter(".active").data("service");
+                setActiveService(getAdjacentService(currentService, 1));
+            }
+
+            function stopAutoSlide() {
+                if (autoSlideTimer) {
+                    clearInterval(autoSlideTimer);
+                    autoSlideTimer = null;
+                }
+            }
+
+            function startAutoSlide() {
+                stopAutoSlide();
+                if ($serviceStackItems.length <= 1) return;
+                autoSlideTimer = setInterval(function () {
+                    if (isSliderHovered) return;
+                    goToNextService();
+                }, autoSlideDelay);
+            }
+
             function clamp(value, min, max) {
                 return Math.min(Math.max(value, min), max);
             }
@@ -246,9 +275,10 @@
                 setActiveService(getAdjacentService(currentService, -1));
             });
             $serviceStackNext.on("click", function () {
-                var currentService = $serviceTabs.filter(".active").data("service");
-                setActiveService(getAdjacentService(currentService, 1));
+                goToNextService();
             });
+            $serviceStackWrap.on("mouseenter", function () { isSliderHovered = true; });
+            $serviceStackWrap.on("mouseleave", function () { isSliderHovered = false; });
             $scrollToServicesBtn.on("click", function () {
                 if (!$whatWeDoSection.length) return;
 
@@ -262,6 +292,7 @@
             if ($serviceTabs.length) {
                 setActiveService($serviceTabs.first().data("service"));
             }
+            startAutoSlide();
             updateIntroShrink();
 
             if (lenis && typeof lenis.on === "function") {
