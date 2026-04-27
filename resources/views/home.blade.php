@@ -53,8 +53,8 @@
         <hr>
     </div>
 
-    <div class=" section vh-100 w-100" id="whatWeDoSection">
-        <div class="container py-5">
+    <div class=" section vh-100 w-100 d-flex align-items-center justify-content-center" id="whatWeDoSection">
+        <div class="container ">
             <div class="w-100">
                 <p class="fs-6 text-center m-0" style="color: #b49d59 !important;">SERVICES</p>
                 <h2 class="fs-1 text-center mb-5"><i class="fa-solid fa-spa" style="color: #b49d59 !important;"></i> What We Do</h2>
@@ -118,11 +118,27 @@
         </div>
     </div>
 
-    <footer style="margin-top: 200px;">
-        <div class="container-fluid p-3 bg-dark text-white mt-5">
-            <div class="d-flex justify-content-between align-items-center w-100">
-                <div class="w-50"><h3 class="title_font p-4">Jlene Salon</h3></div>
-                <div class="w-50"><h3>Follow Us</h3><p>最新のニュースやプロモーション情報を見逃さないよう、ぜひ当社のソーシャルメディアをフォローしてください。</p><div class="d-flex gap-3"><i class="fa-brands fa-facebook"></i><i class="fa-brands fa-instagram"></i><i class="fa-brands fa-twitter"></i><i class="fa-brands fa-youtube"></i></div></div>
+    <footer style="">
+        <div class="container-fluid p-3 py-5 bg-dark text-white mt-5">
+            <div class="row w-100">
+                <div class="col-6 col-md-3">
+                    <h3 class="title_font py-4">Jlene Salon</h3>
+                    <p>最新のニュースやプロモーション情報を見逃さないよう、ぜひ当社のソーシャルメディアをフォローしてください。</p>
+                </div>
+                <div class="col-6 col-md-3"><h3>Follow Us</h3><p>最新のニュースやプロモーション情報を見逃さないよう、ぜひ当社のソーシャルメディアをフォローしてください。</p><div class="d-flex gap-3"><i class="fa-brands fa-facebook"></i><i class="fa-brands fa-instagram"></i><i class="fa-brands fa-twitter"></i><i class="fa-brands fa-youtube"></i></div></div>
+                <div class="col-6 col-md-3">
+                    <h3>Contact Us</h3>
+                    <p>090-1234-5678</p>
+                    <p>info@jlenesalon.com</p>
+                    <p>1234, Main Street, Anytown, USA</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <!-- google map -->
+                    <div class="map-container">
+                        <iframe class="w-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3242.1244197235083!2d139.7248306!3d35.6493061!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188b0046d3b615%3A0xa0461165d1406bc4!2zSmxlbmUgc2Fsb24gSGlyb28g44K444Kn44Kk44Oq44Oz44K144Ot44Oz5bqD5bC-ICjjgrfjgqfjgqLjgrXjg63jg7Mp!5e0!3m2!1sja!2sjp!4v1749805729785!5m2!1sja!2sjp" 
+                            width="300" height="160" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
