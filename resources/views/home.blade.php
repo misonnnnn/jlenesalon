@@ -17,22 +17,49 @@
     @endphp
     @include('partials.site-header', ['services' => $services, 'isHomeHeader' => true])
 
-    <div class="first_section section vh-100 object-fit-overflow-hidden" style="background-color: #201c1c;">
-        <img src="{{ asset('bg1.png') }}" alt="" class="w-100 h-100 position-absolute top-0 start-0" style="object-fit: cover; object-position: center; opacity: 0.3;">
-        <div class="main-content position-absolute top-50 mt-5 w-75 start-50 translate-middle" style="z-index: 10;">
-            <p class="text-white text-center fs-2">{!! $pageWelcomeMessage[$locale] !!}</p>
-            <p class="text-white text-center fs-6">{{ $pageDescription[$locale] }}</p>
+    <div class=" section vh-100 object-fit-overflow-hidden" style="background-color: #201c1c;">
+        <img src="{{ asset('bg1.png') }}" alt="" class="w-100 h-100 position-absolute top-0 start-0 first_section_image" style="">
+        <div class="first_section_image_gradient"></div>
+        <div class="main-content position-absolute top-50 mt-5  " style="z-index: 10;">
+            <!-- <p class="text-white text-center fs-2">{!! $pageWelcomeMessage[$locale] !!}</p> -->
+            <!-- <p class="text-white text-center fs-6">{{ $pageDescription[$locale] }}</p> -->
+            <p class="text-white fs-2">{!! $pageWelcomeMessage[$locale] !!}</p>
+            <h1 class="text-white fs-1 home_title"> Where Beauty Meets Relaxation</h1>
             <hr class="text-light-hr">
-            <div class="d-flex justify-content-center align-items-center gap-3">
+            <div class="d-flex  align-items-center justify-content-center justify-content-md-start gap-1 gap-md-3">
                 <a href="{{ route('bookings.create') }}" class="btn rounded-pill border-white border-2 text-white px-4 py-2 text-decoration-none d-inline-flex align-items-center">{{ $pageBookNowButtonText[$locale] }} <i class="fa-regular fa-hand-point-up ms-2"></i></a>
                 <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" id="scrollToServicesBtn">{{ $pageSeeServicesButtonText[$locale] }}</button>
             </div>
         </div>
     </div>
 
-    <div class="first_section section vh-100 w-100" id="whatWeDoSection">
+    <div class="section text-white stats_section">
+        <div class="container">
+            <div class="row text-center py-5 stats_row">
+                <div class="col-3">
+                    <h5><span class="stats_row_number">900+</span><br> Satisfied Clients</h5>
+                </div>
+                <div class="col-3">
+                    <h5><span class="stats_row_number">10+</span><br> Years of Professional Experience</h5>
+                </div>
+                <div class="col-3">
+                    <h5><span class="stats_row_number">1,500+</span><br> Professional Treatments Completed</h5>
+                </div>
+                <div class="col-3">
+                    <h5><span class="stats_row_number">4.9★</span><br> Professional Rating</h5>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+
+    <div class=" section vh-100 w-100" id="whatWeDoSection">
         <div class="container py-5">
-            <div class="w-100"><p class="fs-6 text-center m-0" style="color: #b49d59 !important;">SERVICES</p><h2 class="fs-1 text-center">What We Do</h2><hr class="text-light-hr w-25 text-center mx-auto"></div>
+            <div class="w-100">
+                <p class="fs-6 text-center m-0" style="color: #b49d59 !important;">SERVICES</p>
+                <h2 class="fs-1 text-center mb-5">What We Do</h2>
+                <hr class="text-light-hr w-25 text-center mx-auto">
+            </div>
             <div class="w-100 w-md-50 mx-auto">
                 <div class="row service_tabs">
                     @forelse ($services as $index => $service)
