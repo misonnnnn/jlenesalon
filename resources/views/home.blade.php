@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=1.0.1">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=1.0.2">
 </head>
 <body>
     @php
@@ -17,109 +17,116 @@
     @endphp
     @include('partials.site-header', ['services' => $services, 'isHomeHeader' => true])
 
-    <div class=" section vh-100 object-fit-overflow-hidden" style="background-color: #201c1c;">
-        <img src="{{ asset('bg1.png') }}" alt="" class="w-100 h-100 position-absolute top-0 start-0 first_section_image" style="">
-        <div class="first_section_image_gradient"></div>
-        <div class="main-content position-absolute top-50 mt-5  " style="z-index: 10;">
-            <!-- <p class="text-white text-center fs-2">{!! $pageWelcomeMessage[$locale] !!}</p> -->
-            <!-- <p class="text-white text-center fs-6">{{ $pageDescription[$locale] }}</p> -->
-            <p class="text-white fs-2">{!! $pageWelcomeMessage[$locale] !!}</p>
-            <h1 class="text-white fs-1 home_title"> Where Beauty Meets Relaxation</h1>
-            <hr class="text-light-hr">
-            <div class="d-flex  align-items-center justify-content-center justify-content-md-start gap-1 gap-md-3">
-                <a href="{{ route('bookings.create') }}" class="btn rounded-pill border-white border-2 text-white px-4 py-2 text-decoration-none d-inline-flex align-items-center">{{ $pageBookNowButtonText[$locale] }} <i class="fa-regular fa-hand-point-up ms-2"></i></a>
-                <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" id="scrollToServicesBtn">{{ $pageSeeServicesButtonText[$locale] }}</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="section text-white stats_section">
-        <div class="container">
-            <div class="row text-center py-5 stats_row">
-                <div class="col-3">
-                    <h5><span class="stats_row_number">900+</span><br> Satisfied Clients</h5>
-                </div>
-                <div class="col-3">
-                    <h5><span class="stats_row_number">10+</span><br> Years of Professional Experience</h5>
-                </div>
-                <div class="col-3">
-                    <h5><span class="stats_row_number">1,500+</span><br> Professional Treatments Completed</h5>
-                </div>
-                <div class="col-3">
-                    <h5><span class="stats_row_number">4.9★</span><br> Professional Rating</h5>
+    <div class="vh-100 w-100 position-fixed" id="introScene" style="transform-origin: center top; will-change: transform;">
+        <div class=" section vh-100 object-fit-overflow-hidden" style="background-color: #201c1c;">
+            <img src="{{ asset('bg1.png') }}" alt="" class="w-100 h-100 position-absolute top-0 start-0 first_section_image" style="">
+            <div class="first_section_image_gradient"></div>
+            <div class="main-content position-absolute top-50 mt-5  " style="z-index: 10;">
+                <!-- <p class="text-white text-center fs-2">{!! $pageWelcomeMessage[$locale] !!}</p> -->
+                <!-- <p class="text-white text-center fs-6">{{ $pageDescription[$locale] }}</p> -->
+                <p class="text-white fs-2">{!! $pageWelcomeMessage[$locale] !!}</p>
+                <h1 class="text-white fs-1 home_title"> Where Beauty Meets Relaxation <i class="fa-solid fa-spa"></i></h1>
+                <hr class="text-light-hr">
+                <div class="d-flex  align-items-center justify-content-center justify-content-md-start gap-1 gap-md-3">
+                    <a href="{{ route('bookings.create') }}" class="btn rounded-pill border-white border-2 text-white px-4 py-2 text-decoration-none d-inline-flex align-items-center">{{ $pageBookNowButtonText[$locale] }} <i class="fa-regular fa-hand-point-up ms-2"></i></a>
+                    <button class="btn rounded-pill border-white border-2 text-white px-4 py-2" id="scrollToServicesBtn">{{ $pageSeeServicesButtonText[$locale] }}</button>
                 </div>
             </div>
         </div>
-        <hr>
+
+        
     </div>
 
-    <div class=" section vh-100 w-100 d-flex align-items-center justify-content-center" id="whatWeDoSection">
-        <div class="container ">
-            <div class="w-100">
-                <p class="fs-6 text-center m-0" style="color: #b49d59 !important;">SERVICES</p>
-                <h2 class="fs-1 text-center mb-5"><i class="fa-solid fa-spa" style="color: #b49d59 !important;"></i> What We Do</h2>
-                <hr class="text-light-hr w-25 text-center mx-auto">
+
+    <div class=" section vh-100 w-100  bg-light justify-content-center position-relative" id="whatWeDoSection" style="top:100vh;">
+        <div class=" text-white stats_section">
+            <div class="container">
+                <div class="row text-center py-5 stats_row">
+                    <div class="col-3">
+                        <h5><span class="stats_row_number">900+</span><br> Satisfied Clients</h5>
+                    </div>
+                    <div class="col-3">
+                        <h5><span class="stats_row_number">10+</span><br> Years of Professional Experience</h5>
+                    </div>
+                    <div class="col-3">
+                        <h5><span class="stats_row_number">1,500+</span><br> Professional Treatments Completed</h5>
+                    </div>
+                    <div class="col-3">
+                        <h5><span class="stats_row_number">4.9★</span><br> Professional Rating</h5>
+                    </div>
+                </div>
             </div>
-            <div class="w-100 w-md-50 mx-auto d-none">
-                <div class="row service_tabs">
-                    @forelse ($services as $index => $service)
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-2 mx-auto">
+            <hr>
+        </div>
+        <div class="d-flex align-items-center justify-content-center">
+            <div class="container ">
+                <div class="w-100">
+                    <p class="fs-6 text-center m-0" style="color: #b49d59 !important;">SERVICES</p>
+                    <h2 class="fs-1 text-center mb-5"><i class="fa-solid fa-spa" style="color: #b49d59 !important;"></i> What We Do</h2>
+                    <hr class="text-light-hr w-25 text-center mx-auto">
+                </div>
+                <div class="w-100 w-md-50 mx-auto d-none">
+                    <div class="row service_tabs">
+                        @forelse ($services as $index => $service)
+                            <div class="col-6 col-sm-6 col-md-4 col-lg-2 mx-auto">
+                                <div
+                                    class="service_tab_item {{ $index === 0 ? 'active' : '' }}"
+                                    data-service="{{ $service->slug }}"
+                                    data-title="{{ $isJa ? $service->name_ja : $service->name_en }}"
+                                    data-sub-title="{{ $isJa ? $service->name_en : $service->name_ja }}"
+                                    data-description="{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}"
+                                    data-image="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
+                                    data-url="{{ route('services.show', $service) }}"
+                                >
+                                    <div class="what_we_do_icon_outer position-relative start-50 translate-middle  mt-5">
+                                        <img src="{{ $service->icon_image ? asset($service->icon_image) : asset('service/facial.png') }}" alt="{{ $service->name_en }}" class="w-100">
+                                    </div>
+                                    <p class="text-muted fs-6 text-center m-0 what_we_do_icon_text" style="margin-top: -20px !important; ">{{ strtoupper($isJa ? $service->name_ja : $service->name_en) }}</p>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-muted mb-0">No services added yet.</p>
+                        @endforelse
+                        <div class="service_active_indicator"></div>
+                    </div>
+                </div>
+                <div class="service_stack_slider_wrap mx-auto mt-3">
+                    <button type="button" class="service_stack_nav service_stack_prev" aria-label="Previous service">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <div class="service_stack_slider">
+                        @foreach ($services as $service)
                             <div
-                                class="service_tab_item {{ $index === 0 ? 'active' : '' }}"
+                                class="service_stack_item"
                                 data-service="{{ $service->slug }}"
-                                data-title="{{ $isJa ? $service->name_ja : $service->name_en }}"
-                                data-sub-title="{{ $isJa ? $service->name_en : $service->name_ja }}"
-                                data-description="{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}"
-                                data-image="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
-                                data-url="{{ route('services.show', $service) }}"
                             >
-                                <div class="what_we_do_icon_outer position-relative start-50 translate-middle  mt-5">
-                                    <img src="{{ $service->icon_image ? asset($service->icon_image) : asset('service/facial.png') }}" alt="{{ $service->name_en }}" class="w-100">
-                                </div>
-                                <p class="text-muted fs-6 text-center m-0 what_we_do_icon_text" style="margin-top: -20px !important; ">{{ strtoupper($isJa ? $service->name_ja : $service->name_en) }}</p>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-muted mb-0">No services added yet.</p>
-                    @endforelse
-                    <div class="service_active_indicator"></div>
-                </div>
-            </div>
-            <div class="service_stack_slider_wrap mx-auto mt-3">
-                <button type="button" class="service_stack_nav service_stack_prev" aria-label="Previous service">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </button>
-                <div class="service_stack_slider">
-                    @foreach ($services as $service)
-                        <div
-                            class="service_stack_item"
-                            data-service="{{ $service->slug }}"
-                        >
-                            <img
-                                src="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
-                                alt="{{ $isJa ? $service->name_ja : $service->name_en }}"
-                                class="service_stack_image"
-                            >
-                            <div class="service_stack_item_overlay">
-                                <div class="service_stack_content">
-                                    <p class="service_stack_subtitle mb-1">{{ $isJa ? $service->name_en : $service->name_ja }}</p>
-                                    <h4 class="service_stack_title mb-1">{{ strtoupper($isJa ? $service->name_ja : $service->name_en) }}</h4>
-                                    <p class="service_stack_description mb-2">{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}</p>
-                                    <a href="{{ route('services.show', $service) }}" class="btn service_stack_read_more">Read More</a>
+                                <img
+                                    src="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
+                                    alt="{{ $isJa ? $service->name_ja : $service->name_en }}"
+                                    class="service_stack_image"
+                                >
+                                <div class="service_stack_item_overlay">
+                                    <div class="service_stack_content">
+                                        <p class="service_stack_subtitle mb-1">{{ $isJa ? $service->name_en : $service->name_ja }}</p>
+                                        <h4 class="service_stack_title mb-1">{{ strtoupper($isJa ? $service->name_ja : $service->name_en) }}</h4>
+                                        <p class="service_stack_description mb-2">{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}</p>
+                                        <a href="{{ route('services.show', $service) }}" class="btn service_stack_read_more">Read More</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
+                    <button type="button" class="service_stack_nav service_stack_next" aria-label="Next service">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
                 </div>
-                <button type="button" class="service_stack_nav service_stack_next" aria-label="Next service">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
             </div>
         </div>
+        
     </div>
 
-    <footer style="">
-        <div class="container-fluid p-3 py-5 bg-dark text-white mt-5">
+    <footer class="bg-dark position-relative" style="top: 100vh !important;">
+        <div class="container-fluid p-3 py-5  text-white">
             <div class="row w-100">
                 <div class="col-6 col-md-3">
                     <h3 class="title_font py-4">Jlene Salon</h3>
@@ -176,6 +183,7 @@
             var $serviceIndicator = $(".service_active_indicator");
             var $scrollToServicesBtn = $("#scrollToServicesBtn");
             var $whatWeDoSection = $("#whatWeDoSection");
+            var $introScene = $("#introScene");
             var $serviceStackItems = $(".service_stack_item");
             var $serviceStackPrev = $(".service_stack_prev");
             var $serviceStackNext = $(".service_stack_next");
@@ -219,6 +227,18 @@
                 updateStackSlider(serviceKey);
             }
 
+            function clamp(value, min, max) {
+                return Math.min(Math.max(value, min), max);
+            }
+
+            function updateIntroShrink() {
+                if (!$introScene.length) return;
+                var scrollTop = window.scrollY || window.pageYOffset || 0;
+                var progress = clamp(scrollTop / window.innerHeight, 0, 1);
+                var scale = 1 - (0.12 * progress);
+                $introScene.css("transform", "scale(" + scale.toFixed(3) + ")");
+            }
+
             $serviceTabs.on("click", function () { setActiveService($(this).data("service")); });
             $serviceStackItems.on("click", function () { setActiveService($(this).data("service")); });
             $serviceStackPrev.on("click", function () {
@@ -242,9 +262,22 @@
             if ($serviceTabs.length) {
                 setActiveService($serviceTabs.first().data("service"));
             }
+            updateIntroShrink();
+
+            if (lenis && typeof lenis.on === "function") {
+                lenis.on("scroll", function () {
+                    updateIntroShrink();
+                });
+            } else {
+                $(window).on("scroll", function () {
+                    updateIntroShrink();
+                });
+            }
+
             $(window).on("resize", function () {
                 var $currentActive = $serviceTabs.filter(".active");
                 if ($currentActive.length) { moveServiceIndicator($currentActive); }
+                updateIntroShrink();
             });
         });
     </script>
