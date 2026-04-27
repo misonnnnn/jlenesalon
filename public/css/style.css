@@ -573,3 +573,19 @@ body {
         font-size: 0.74rem;
     }
 }
+
+/* iOS Safari: prevent zoom on input focus and reduce double-tap zoom behavior */
+html,
+body {
+    touch-action: manipulation;
+}
+
+@media screen and (max-width: 768px) {
+    input,
+    select,
+    textarea,
+    .form-control,
+    .form-select {
+        font-size: 16px !important;
+    }
+}
