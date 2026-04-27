@@ -57,10 +57,10 @@
         <div class="container py-5">
             <div class="w-100">
                 <p class="fs-6 text-center m-0" style="color: #b49d59 !important;">SERVICES</p>
-                <h2 class="fs-1 text-center mb-5">What We Do</h2>
+                <h2 class="fs-1 text-center mb-5"><i class="fa-solid fa-spa" style="color: #b49d59 !important;"></i> What We Do</h2>
                 <hr class="text-light-hr w-25 text-center mx-auto">
             </div>
-            <div class="w-100 w-md-50 mx-auto">
+            <div class="w-100 w-md-50 mx-auto d-none">
                 <div class="row service_tabs">
                     @forelse ($services as $index => $service)
                         <div class="col-6 col-sm-6 col-md-4 col-lg-2 mx-auto">
@@ -85,19 +85,35 @@
                     <div class="service_active_indicator"></div>
                 </div>
             </div>
-            <div class="w-75 mx-auto mt-5">
-                <div class="row">
-                    <div class="col-md-7"><div class="shadow border border-white border-3"><img src="{{ $firstService?->excerpt_image ? asset($firstService->excerpt_image) : asset('bg1.png') }}" alt="" class="w-100" id="serviceDetailImage"></div></div>
-                    <div class="col-md-5">
-                        <h3 id="serviceDetailTitle">{{ $firstService ? ($isJa ? $firstService->name_ja : $firstService->name_en) : 'SERVICE' }}</h3>
-                        <p class="text-muted mb-2" id="serviceDetailSubTitle">{{ $firstService ? ($isJa ? $firstService->name_en : $firstService->name_ja) : '' }}</p>
-                        <hr class="w-25" style="color: #b49d59 !important;">
-                        <p id="serviceDetailDescription">{{ $firstService ? ($isJa ? ($firstService->excerpt_ja ?? $firstService->excerpt) : ($firstService->excerpt_en ?? $firstService->excerpt)) : 'No service content yet.' }}</p>
-                        @if ($firstService)
-                            <a href="{{ route('services.show', $firstService) }}" class="btn rounded-pill border-white border-2 text-white px-4 py-2 text-decoration-none" style="background-color: #b49d59;" id="serviceDetailButton">Read More</a>
-                        @endif
-                    </div>
+            <div class="service_stack_slider_wrap mx-auto mt-3">
+                <button type="button" class="service_stack_nav service_stack_prev" aria-label="Previous service">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="service_stack_slider">
+                    @foreach ($services as $service)
+                        <div
+                            class="service_stack_item"
+                            data-service="{{ $service->slug }}"
+                        >
+                            <img
+                                src="{{ $service->excerpt_image ? asset($service->excerpt_image) : asset('bg1.png') }}"
+                                alt="{{ $isJa ? $service->name_ja : $service->name_en }}"
+                                class="service_stack_image"
+                            >
+                            <div class="service_stack_item_overlay">
+                                <div class="service_stack_content">
+                                    <p class="service_stack_subtitle mb-1">{{ $isJa ? $service->name_en : $service->name_ja }}</p>
+                                    <h4 class="service_stack_title mb-1">{{ strtoupper($isJa ? $service->name_ja : $service->name_en) }}</h4>
+                                    <p class="service_stack_description mb-2">{{ $isJa ? ($service->excerpt_ja ?? $service->excerpt) : ($service->excerpt_en ?? $service->excerpt) }}</p>
+                                    <a href="{{ route('services.show', $service) }}" class="btn service_stack_read_more">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
+                <button type="button" class="service_stack_nav service_stack_next" aria-label="Next service">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -142,13 +158,11 @@
 
             var $serviceTabs = $(".service_tab_item");
             var $serviceIndicator = $(".service_active_indicator");
-            var $serviceTitle = $("#serviceDetailTitle");
-            var $serviceSubTitle = $("#serviceDetailSubTitle");
-            var $serviceDescription = $("#serviceDetailDescription");
-            var $serviceImage = $("#serviceDetailImage");
-            var $serviceButton = $("#serviceDetailButton");
             var $scrollToServicesBtn = $("#scrollToServicesBtn");
             var $whatWeDoSection = $("#whatWeDoSection");
+            var $serviceStackItems = $(".service_stack_item");
+            var $serviceStackPrev = $(".service_stack_prev");
+            var $serviceStackNext = $(".service_stack_next");
 
             function moveServiceIndicator($activeTab) {
                 var tabLeft = $activeTab.position().left + (($activeTab.outerWidth() - $activeTab.find(".what_we_do_icon_outer").outerWidth()) / 2);
@@ -156,21 +170,49 @@
                 $serviceIndicator.css({ left: tabLeft + "px", width: iconWidth + "px" });
             }
 
+            function updateStackSlider(serviceKey) {
+                if (!$serviceStackItems.length) return;
+                var activeIndex = $serviceStackItems.index($serviceStackItems.filter('[data-service="' + serviceKey + '"]'));
+                if (activeIndex < 0) activeIndex = 0;
+                var total = $serviceStackItems.length;
+
+                $serviceStackItems.each(function (index) {
+                    var offset = index - activeIndex;
+                    if (offset > total / 2) offset -= total;
+                    if (offset < -total / 2) offset += total;
+                    $(this).attr("data-offset", offset);
+                });
+            }
+
+            function getAdjacentService(currentService, step) {
+                if (!$serviceStackItems.length) return currentService;
+                var $current = $serviceStackItems.filter('[data-service="' + currentService + '"]');
+                var currentIndex = $serviceStackItems.index($current);
+                if (currentIndex < 0) currentIndex = 0;
+                var total = $serviceStackItems.length;
+                var nextIndex = (currentIndex + step + total) % total;
+                return $serviceStackItems.eq(nextIndex).data("service");
+            }
+
             function setActiveService(serviceKey) {
                 var $activeTab = $serviceTabs.filter('[data-service="' + serviceKey + '"]');
                 if (!$activeTab.length) return;
                 $serviceTabs.removeClass("active");
                 $activeTab.addClass("active");
-                $serviceTitle.text($activeTab.data("title") || "");
-                $serviceSubTitle.text($activeTab.data("sub-title") || "");
-                $serviceDescription.text($activeTab.data("description") || "");
-                $serviceImage.attr("src", $activeTab.data("image"));
-                $serviceImage.attr("alt", $activeTab.data("sub-title"));
-                $serviceButton.attr("href", $activeTab.data("url"));
                 moveServiceIndicator($activeTab);
+                updateStackSlider(serviceKey);
             }
 
             $serviceTabs.on("click", function () { setActiveService($(this).data("service")); });
+            $serviceStackItems.on("click", function () { setActiveService($(this).data("service")); });
+            $serviceStackPrev.on("click", function () {
+                var currentService = $serviceTabs.filter(".active").data("service");
+                setActiveService(getAdjacentService(currentService, -1));
+            });
+            $serviceStackNext.on("click", function () {
+                var currentService = $serviceTabs.filter(".active").data("service");
+                setActiveService(getAdjacentService(currentService, 1));
+            });
             $scrollToServicesBtn.on("click", function () {
                 if (!$whatWeDoSection.length) return;
 
