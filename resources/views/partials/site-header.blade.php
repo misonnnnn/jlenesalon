@@ -11,7 +11,7 @@
     <hr class="text-light-hr mt-3">
     <div class="container d-flex justify-content-between align-items-center  ">
         <button class="hamburger_btn d-block d-md-none ms-auto mb-3" type="button" aria-label="Open menu">
-            <i class="fa-solid fa-bars"></i>
+            <i class="fa-solid fa-bars-staggered fs-2"></i>
         </button>
         <div class="sidebar_menu_background d-block d-md-none"></div>
         <ul class="list-unstyled d-flex justify-content-center align-items-center w-100 mobile_menu_active">
