@@ -25,7 +25,7 @@
                 <!-- <p class="text-white text-center fs-2">{!! $pageWelcomeMessage[$locale] !!}</p> -->
                 <!-- <p class="text-white text-center fs-6">{{ $pageDescription[$locale] }}</p> -->
                 <p class="text-white fs-2">{!! $pageWelcomeMessage[$locale] !!}</p>
-                <h1 class="text-white fs-1 home_title"> Where Beauty Meets Relaxation <i class="fa-solid fa-spa"></i></h1>
+                <h1 class="text-white fs-1 home_title"> Where <span style="color: #b49d59 !important;">Beauty</span> Meets <span style="color: #b49d59 !important;">Relaxation</span> <i class="fa-solid fa-spa"></i></h1>
                 <hr class="text-light-hr">
                 <div class="d-flex  align-items-center justify-content-center justify-content-md-start gap-1 gap-md-3">
                     <a href="{{ route('bookings.create') }}" class="btn rounded-pill border-white border-2 text-white px-4 py-2 text-decoration-none d-inline-flex align-items-center">{{ $pageBookNowButtonText[$locale] }} <i class="fa-regular fa-hand-point-up ms-2"></i></a>
