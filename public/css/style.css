@@ -3,6 +3,24 @@
     src: url('../fonts/SenjalaraDemoRegular.ttf') format('truetype');
 }
 
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: #000;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #b49d59;
+    border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #9a8548;
+}
+
+
 html {
     font-size: 13px;
 }
@@ -283,7 +301,9 @@ body {
 }
 
 .stats_section {
-    background: linear-gradient(to left, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+    border-top: 1px solid #fff;
+    background-color: #000;
+    background: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 1));
 }
 
 .service_stack_slider_wrap {

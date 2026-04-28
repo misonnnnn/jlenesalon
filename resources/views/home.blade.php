@@ -46,10 +46,10 @@
                         <h5><span class="stats_row_number">900+</span><br> Satisfied Clients</h5>
                     </div>
                     <div class="col-3">
-                        <h5><span class="stats_row_number">10+</span><br> Years of Professional Experience</h5>
+                        <h5><span class="stats_row_number">10+</span><br> Years of Experience</h5>
                     </div>
                     <div class="col-3">
-                        <h5><span class="stats_row_number">1,500+</span><br> Professional Treatments Completed</h5>
+                        <h5><span class="stats_row_number">1,500+</span><br>Treatments Completed</h5>
                     </div>
                     <div class="col-3">
                         <h5><span class="stats_row_number">4.9★</span><br> Professional Rating</h5>
@@ -260,6 +260,79 @@
                 return Math.min(Math.max(value, min), max);
             }
 
+            function animateStatsCounters() {
+                var $statsNumbers = $(".stats_row_number");
+                if (!$statsNumbers.length) return;
+
+                var duration = 4000;
+                var startTs = null;
+
+                var items = $statsNumbers.map(function () {
+                    var $el = $(this);
+                    var raw = String($el.text()).trim();
+                    var match = raw.match(/[\d,.]+/);
+                    if (!match) {
+                        return {
+                            $el: $el,
+                            raw: raw,
+                            target: 0,
+                            prefix: "",
+                            suffix: "",
+                            decimals: 0
+                        };
+                    }
+
+                    var numText = match[0];
+                    var target = parseFloat(numText.replace(/,/g, ""));
+                    var startIdx = match.index || 0;
+                    var endIdx = startIdx + numText.length;
+                    var decimals = (numText.split(".")[1] || "").length;
+
+                    return {
+                        $el: $el,
+                        raw: raw,
+                        target: Number.isFinite(target) ? target : 0,
+                        prefix: raw.slice(0, startIdx),
+                        suffix: raw.slice(endIdx),
+                        decimals: decimals
+                    };
+                }).get();
+
+                function step(ts) {
+                    if (!startTs) startTs = ts;
+                    var linearProgress = Math.min((ts - startTs) / duration, 1);
+                    // Ease-out: fast start, slower near the end.
+                    var progress = 1 - Math.pow(1 - linearProgress, 3);
+
+                    items.forEach(function (item) {
+                        if (!item.target) {
+                            item.$el.text(item.raw);
+                            return;
+                        }
+
+                        var value = item.target * progress;
+                        var rendered;
+                        if (item.decimals > 0) {
+                            rendered = value.toFixed(item.decimals);
+                        } else {
+                            rendered = Math.floor(value).toLocaleString();
+                        }
+
+                        item.$el.text(item.prefix + rendered + item.suffix);
+                    });
+
+                    if (linearProgress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        items.forEach(function (item) {
+                            item.$el.text(item.raw);
+                        });
+                    }
+                }
+
+                requestAnimationFrame(step);
+            }
+
             function updateIntroShrink() {
                 if (!$introScene.length) return;
                 var scrollTop = window.scrollY || window.pageYOffset || 0;
@@ -294,6 +367,23 @@
             }
             startAutoSlide();
             updateIntroShrink();
+
+            var statsAnimated = false;
+            var statsSection = document.querySelector(".stats_section");
+            if (statsSection && "IntersectionObserver" in window) {
+                var statsObserver = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting && !statsAnimated) {
+                            statsAnimated = true;
+                            animateStatsCounters();
+                            statsObserver.disconnect();
+                        }
+                    });
+                }, { threshold: 0.01 });
+                statsObserver.observe(statsSection);
+            } else {
+                animateStatsCounters();
+            }
 
             if (lenis && typeof lenis.on === "function") {
                 lenis.on("scroll", function () {
