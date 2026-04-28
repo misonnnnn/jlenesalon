@@ -155,6 +155,10 @@
                     class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
                     Services
                 </a>
+                <a href="{{ route('admin.payments.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
+                    Payment methods
+                </a>
             </nav>
 
             <hr class="border-secondary my-4">

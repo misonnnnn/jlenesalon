@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Booking;
+use App\Models\PaymentMethod;
 use App\Models\ServiceMenu;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,7 +28,10 @@ class StoreBookingRequest extends FormRequest
             'customer_email' => ['required', 'email', 'max:255'],
             'customer_phone' => ['nullable', 'string', 'max:50'],
             'starts_at' => ['required', 'date', 'after:now'],
-            'payment_method' => ['required', Rule::in(['card', 'gcash', 'paypay', 'linepay'])],
+            'payment_method' => [
+                'required',
+                Rule::exists('payment_methods', 'code')->where('is_active', true),
+            ],
             'notes' => ['nullable', 'string', 'max:2000'],
         ];
     }
@@ -61,6 +65,18 @@ class StoreBookingRequest extends FormRequest
 
             if ($taken) {
                 $validator->errors()->add('starts_at', __('This date and time is already booked for this service. Please choose another slot.'));
+            }
+
+            $paymentMethodCode = (string) $this->input('payment_method', '');
+            if ($paymentMethodCode !== '') {
+                $method = PaymentMethod::query()
+                    ->where('code', $paymentMethodCode)
+                    ->where('is_active', true)
+                    ->first();
+
+                if (!$method) {
+                    $validator->errors()->add('payment_method', __('This payment method is not available.'));
+                }
             }
         });
     }

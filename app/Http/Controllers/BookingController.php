@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookingRequest;
 use App\Models\Booking;
+use App\Models\PaymentMethod;
 use App\Models\Service;
 use App\Models\ServiceMenu;
 use Illuminate\Http\JsonResponse;
@@ -21,12 +22,6 @@ use Stripe\Webhook;
 
 class BookingController extends Controller
 {
-    private const STRIPE_PAYMENT_METHOD_MAP = [
-        'card' => 'card',
-        'gcash' => 'gcash',
-        'paypay' => 'paypay',
-    ];
-
     private const STRIPE_ZERO_DECIMAL_CURRENCIES = [
         'bif', 'clp', 'djf', 'gnf', 'jpy', 'kmf', 'krw', 'mga',
         'pyg', 'rwf', 'ugx', 'vnd', 'vuv', 'xaf', 'xof', 'xpf',
@@ -44,6 +39,11 @@ class BookingController extends Controller
 
         $preselectedService = $request->query('service');
         $preselectedMenu = $request->query('menu');
+        $paymentMethods = PaymentMethod::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
 
         $oldMenuId = (int) $request->old('service_menu_id', 0);
         if ($oldMenuId > 0) {
@@ -53,7 +53,7 @@ class BookingController extends Controller
             }
         }
 
-        return view('booking', compact('services', 'preselectedService', 'preselectedMenu'));
+        return view('booking', compact('services', 'preselectedService', 'preselectedMenu', 'paymentMethods'));
     }
 
     public function store(StoreBookingRequest $request): RedirectResponse
@@ -69,20 +69,16 @@ class BookingController extends Controller
 
         $validated = $request->validated();
         $selectedMethod = strtolower((string) ($validated['payment_method'] ?? 'card'));
-        if ($selectedMethod === 'linepay') {
-            return redirect()
-                ->route('bookings.create')
-                ->withErrors([
-                    'payment_method' => 'LINE Pay is not available via Stripe Checkout yet. Please choose Card, GCash, or PayPay.',
-                ])->withInput();
-        }
-
-        $stripePaymentMethod = self::STRIPE_PAYMENT_METHOD_MAP[$selectedMethod] ?? null;
+        $paymentMethod = PaymentMethod::query()
+            ->where('code', $selectedMethod)
+            ->where('is_active', true)
+            ->first();
+        $stripePaymentMethod = $paymentMethod?->stripe_method;
         if ($stripePaymentMethod === null) {
             return redirect()
                 ->route('bookings.create')
                 ->withErrors([
-                    'payment_method' => 'Unsupported payment method selected.',
+                    'payment_method' => 'This payment method is currently unavailable for Stripe Checkout.',
                 ])->withInput();
         }
 

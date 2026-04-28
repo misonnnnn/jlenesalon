@@ -26,7 +26,7 @@
         'phone' => $isJa ? '電話番号（任意）' : 'Phone (optional)',
         'payment_method' => $isJa ? 'お支払い方法' : 'Payment method',
         'select_payment_method' => $isJa ? '支払い方法を選択' : 'Select payment method',
-        'linepay_note' => $isJa ? 'LINE Pay は現在準備中です。' : 'LINE Pay is coming soon.',
+        'payment_note' => $isJa ? 'お支払い方法は今後順次追加予定です。' : 'More payment methods will be added over time.',
         'notes' => $isJa ? 'ご要望・備考（任意）' : 'Notes or requests (optional)',
         'submit' => $isJa ? '支払いへ進む' : 'Continue to payment',
         'success' => $isJa
@@ -162,12 +162,13 @@
                             <label class="form-label fw-semibold" for="payment_method">{{ $t['payment_method'] }}</label>
                             <select class="form-select @error('payment_method') is-invalid @enderror" id="payment_method" name="payment_method" required>
                                 <option value="">{{ $t['select_payment_method'] }}</option>
-                                <option value="card" @selected(old('payment_method', 'card') === 'card')>Card</option>
-                                <option value="gcash" @selected(old('payment_method') === 'gcash')>GCash</option>
-                                <option value="paypay" @selected(old('payment_method') === 'paypay')>PayPay</option>
-                                <option value="linepay" @selected(old('payment_method') === 'linepay')>LINE Pay</option>
+                                @foreach ($paymentMethods as $method)
+                                    <option value="{{ $method->code }}" @selected(old('payment_method', 'card') === $method->code)>
+                                        {{ $method->name }}
+                                    </option>
+                                @endforeach
                             </select>
-                            <div class="form-text">{{ $t['linepay_note'] }}</div>
+                            <div class="form-text">{{ $t['payment_note'] }}</div>
                             @error('payment_method')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror

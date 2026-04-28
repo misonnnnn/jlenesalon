@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminBookingController;
+use App\Http\Controllers\AdminPaymentMethodController;
 use App\Http\Controllers\AdminServiceController;
 use App\Http\Controllers\AdminServiceMenuController;
 use App\Http\Controllers\BookingController;
@@ -41,6 +42,9 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/bookings/events', [AdminBookingController::class, 'events'])->name('bookings.events');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     Route::resource('/services', AdminServiceController::class)->except('show');
+    Route::resource('/payments', AdminPaymentMethodController::class)
+        ->except('show')
+        ->parameters(['payments' => 'payment']);
     Route::get('/services/{service}/menus', [AdminServiceMenuController::class, 'index'])->name('services.menus.index');
     Route::get('/services/{service}/menus/create', [AdminServiceMenuController::class, 'create'])->name('services.menus.create');
     Route::post('/services/{service}/menus', [AdminServiceMenuController::class, 'store'])->name('services.menus.store');
