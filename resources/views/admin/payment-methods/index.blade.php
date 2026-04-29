@@ -5,7 +5,7 @@
 @section('admin-content')
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="admin-page-title">Payment Methods</h3>
-        <a href="{{ route('admin.payments.create') }}" class="btn btn-admin-primary">Add Payment Method</a>
+        <a href="{{ route('admin.payments.create') }}" class="btn btn-sm btn-admin-primary">Add Payment Method</a>
     </div>
 
     @if ($errors->any())
@@ -19,7 +19,7 @@
     @endif
 
     <div class="admin-card">
-        <div class="table-responsive">
+        <div class="table-responsive p-3">
             <table class="table mb-0 align-middle admin-table">
                 <thead>
                     <tr>

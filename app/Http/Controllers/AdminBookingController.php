@@ -15,7 +15,7 @@ class AdminBookingController extends Controller
             ->with(['menu.service'])
             ->orderByDesc('starts_at')
             ->orderByDesc('id')
-            ->paginate(20);
+            ->get();
 
         return view('admin.bookings.index', compact('bookings'));
     }

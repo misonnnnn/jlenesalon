@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>@yield('title', 'Admin Panel')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
     @stack('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -126,6 +128,16 @@
             padding: .35rem .55rem;
             border-radius: 999px;
         }
+        .dataTables_wrapper .dataTables_filter input,
+        .dataTables_wrapper .dataTables_length select {
+            border: 1px solid var(--admin-border);
+            border-radius: 8px;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: var(--admin-accent) !important;
+            border-color: var(--admin-accent) !important;
+            color: #fff !important;
+        }
         @media (max-width: 991px) {
             .admin-shell {
                 display: block;
@@ -194,6 +206,36 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof window.jQuery === 'undefined' || !jQuery.fn.DataTable) {
+                return;
+            }
+
+            $('.admin-table').each(function () {
+                var $table = $(this);
+                if ($.fn.dataTable.isDataTable($table)) {
+                    return;
+                }
+
+                $table.DataTable({
+                    pageLength: 10,
+                    lengthMenu: [10, 25, 50, 100],
+                    order: [],
+                    responsive: true,
+                    language: {
+                        search: 'Search:',
+                        lengthMenu: 'Show _MENU_ entries',
+                    },
+                });
+            });
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

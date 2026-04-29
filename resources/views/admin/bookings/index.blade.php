@@ -17,7 +17,7 @@
                     <p class="admin-muted mb-0">No booking requests yet.</p>
                 </div>
             @else
-                <div class="table-responsive">
+                <div class="table-responsive p-3">
                     <table class="table table-hover mb-0 align-middle admin-table">
                         <thead>
                             <tr>
@@ -39,12 +39,12 @@
                                 <tr>
                                     <td class="text-nowrap">{{ $booking->starts_at->timezone(config('app.timezone'))->format('Y-m-d H:i') }}</td>
                                     <td>
-                                        <div class="fw-semibold">{{ $svc?->name_en ?? '—' }}</div>
+                                        <div class="fw-semibold  fw-bold">{{ $svc?->name_en ?? '—' }}</div>
                                         <div class="small admin-muted">{{ $menu?->title_en ?? $menu?->title ?? '—' }}</div>
                                     </td>
                                     <td> <strong >{{ ucwords(strtolower($booking->customer_name)) }}</strong> 
                                         <div class="small">
-                                            <a href="mailto:{{ $booking->customer_email }}">{{ $booking->customer_email }}</a>
+                                            <p class="m-0 text-muted small">{{ $booking->customer_email }}</p>
                                             @if ($booking->customer_phone)
                                                 <div class="small admin-muted">{{ $booking->customer_phone }}</div>
                                             @endif
@@ -62,9 +62,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-                <div class="p-3 border-top">
-                    {{ $bookings->links() }}
                 </div>
             @endif
         </div>

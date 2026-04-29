@@ -5,7 +5,7 @@
 @section('admin-content')
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="admin-page-title">Services</h3>
-        <a href="{{ route('admin.services.create') }}" class="btn btn-admin-primary">Add Service</a>
+        <a href="{{ route('admin.services.create') }}" class="btn btn-sm btn-admin-primary">Add Service</a>
     </div>
 
     @if ($errors->any())
@@ -19,11 +19,10 @@
     @endif
 
     <div class="admin-card">
-        <div class="table-responsive">
+        <div class="table-responsive p-3">
             <table class="table mb-0 align-middle admin-table">
                 <thead >
                     <tr>
-                        <th>Icon</th>
                         <th>Name</th>
                         <th>Active</th>
                         <th>Sort</th>
@@ -33,7 +32,6 @@
                 <tbody>
                     @forelse ($services as $service)
                         <tr class="p-2">
-                            <td>@if ($service->icon_image)<img src="{{ asset($service->icon_image) }}" style="width:40px;height:40px;object-fit:cover;" alt="icon">@endif</td>
                             <td>
                                 <strong>{{ $service->name_en }}</strong><br>
                                 <small class="text-muted">{{ $service->name_ja }}</small>
@@ -42,7 +40,7 @@
                             <td>{{ $service->sort_order }}</td>
                             <td class="text-end">
                                 <a href="{{ route('admin.services.menus.index', $service) }}" class="btn btn-sm btn-outline-primary"><i class="fa fa-list"></i> Menus</a>
-                                <a href="{{ route('admin.services.edit', $service) }}" class="btn btn-sm btn-primary"><i class="fa-regular fa-pen-to-square"></i></a>
+                                <a href="{{ route('admin.services.edit', $service) }}" class="btn btn-sm btn-admin-primary"><i class="fa-regular fa-pen-to-square"></i></a>
                                 <form action="{{ route('admin.services.destroy', $service) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
