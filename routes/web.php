@@ -45,6 +45,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/bookings/events', [AdminBookingController::class, 'events'])->name('bookings.events');
     Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->whereNumber('booking')->name('bookings.show');
     Route::put('/bookings/{booking}', [AdminBookingController::class, 'update'])->whereNumber('booking')->name('bookings.update');
+    Route::post('/bookings/{booking}/refund', [AdminBookingController::class, 'refund'])->whereNumber('booking')->name('bookings.refund');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     Route::resource('/services', AdminServiceController::class)->except('show');
     Route::resource('/payments', AdminPaymentMethodController::class)

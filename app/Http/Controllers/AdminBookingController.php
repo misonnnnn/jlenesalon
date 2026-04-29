@@ -7,7 +7,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Stripe\StripeClient;
 
 class AdminBookingController extends Controller
 {
@@ -76,6 +78,65 @@ class AdminBookingController extends Controller
         return redirect()
             ->route('admin.bookings.show', $booking)
             ->with('status', 'Booking updated successfully.');
+    }
+
+    public function refund(Booking $booking): RedirectResponse
+    {
+        if (($booking->payment_status ?? '') !== 'paid') {
+            return redirect()
+                ->back()
+                ->withErrors(['payment' => 'Only paid bookings can be refunded.']);
+        }
+
+        if (!$booking->stripe_payment_intent_id) {
+            return redirect()
+                ->back()
+                ->withErrors(['payment' => 'Stripe Payment Intent is missing for this booking.']);
+        }
+
+        if ($booking->stripe_refund_id) {
+            return redirect()
+                ->back()
+                ->withErrors(['payment' => 'This booking already has a processed refund.']);
+        }
+
+        $stripeSecret = (string) config('services.stripe.secret');
+        if ($stripeSecret === '') {
+            return redirect()
+                ->back()
+                ->withErrors(['payment' => 'Stripe secret key is not configured.']);
+        }
+
+        try {
+            $stripe = new StripeClient($stripeSecret);
+            $refund = $stripe->refunds->create([
+                'payment_intent' => $booking->stripe_payment_intent_id,
+                'metadata' => [
+                    'booking_id' => (string) $booking->id,
+                    'source' => 'admin_booking_refund',
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Stripe refund failed from admin booking page.', [
+                'booking_id' => $booking->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect()
+                ->back()
+                ->withErrors(['payment' => 'Refund failed. Please check Stripe logs and try again.']);
+        }
+
+        $booking->update([
+            'payment_status' => 'refunded',
+            'stripe_refund_id' => (string) ($refund->id ?? ''),
+            'stripe_refunded_amount' => isset($refund->amount) ? (int) $refund->amount : $booking->stripe_amount_total,
+            'stripe_refunded_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('admin.bookings.show', $booking)
+            ->with('status', 'Payment refunded successfully.');
     }
 
     public function events(Request $request): JsonResponse

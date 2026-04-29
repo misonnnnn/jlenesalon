@@ -272,7 +272,9 @@ class BookingController extends Controller
             'notes' => $payload['notes'] ?? null,
             'status' => 'pending',
             'payment_status' => 'paid',
-                'payment_method' => (string) ($payload['payment_method'] ?? 'card'),
+            'payment_method' => (string) ($payload['payment_method'] ?? 'card'),
+            'stripe_amount_total' => isset($stripeSession->amount_total) ? (int) $stripeSession->amount_total : null,
+            'stripe_currency' => isset($stripeSession->currency) ? strtoupper((string) $stripeSession->currency) : null,
             'stripe_checkout_session_id' => $checkoutSessionId,
             'stripe_payment_intent_id' => (string) ($stripeSession->payment_intent ?? ''),
         ]);

@@ -17,12 +17,18 @@ class Booking extends Model
         'status',
         'payment_method',
         'payment_status',
+        'stripe_amount_total',
+        'stripe_currency',
+        'stripe_refund_id',
+        'stripe_refunded_amount',
+        'stripe_refunded_at',
         'stripe_checkout_session_id',
         'stripe_payment_intent_id',
     ];
 
     protected $casts = [
         'starts_at' => 'datetime',
+        'stripe_refunded_at' => 'datetime',
     ];
 
     public function menu(): BelongsTo
