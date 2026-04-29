@@ -56,8 +56,7 @@
                                     <td><span class="badge-soft text-uppercase small {{$booking->payment_status == 'paid' ? 'text-success' : 'text-danger'}}    ">{{ $booking->payment_status ?? 'unpaid' }}</span></td>
                                     <td><span class="badge-soft text-uppercase small">{{ $booking->payment_method ?? 'card' }}</span></td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></a>
-                                        <a href="#" class="btn btn-sm btn-admin-primary"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ route('admin.bookings.show', $booking) }}" class="btn btn-sm btn-admin-primary">Manage Booking <i class="fa fa-chevron-right"></i></a>
                                         <!-- <a href="#" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a> -->
                                     </td>
                                 </tr>

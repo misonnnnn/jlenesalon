@@ -43,6 +43,8 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('/settings/language-selector', [AdminSettingController::class, 'updateLanguageSelector'])->name('settings.language-selector');
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings');
     Route::get('/bookings/events', [AdminBookingController::class, 'events'])->name('bookings.events');
+    Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->whereNumber('booking')->name('bookings.show');
+    Route::put('/bookings/{booking}', [AdminBookingController::class, 'update'])->whereNumber('booking')->name('bookings.update');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     Route::resource('/services', AdminServiceController::class)->except('show');
     Route::resource('/payments', AdminPaymentMethodController::class)

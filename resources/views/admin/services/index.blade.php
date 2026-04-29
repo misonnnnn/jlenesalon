@@ -36,7 +36,7 @@
                                 <strong>{{ $service->name_en }}</strong><br>
                                 <small class="text-muted">{{ $service->name_ja }}</small>
                                 </td>
-                                <td>{{ $service->is_active ? 'Yes' : 'No' }}</td>
+                                <td>{!! $service->is_active ? '<span class="badge badge-sm rounded-pill badge-soft text-uppercase small text-success">Active</span>' : '<span class="badge badge-sm rounded-pill badge-soft text-uppercase small text-danger">Inactive</span>' !!}</td>
                             <td>{{ $service->sort_order }}</td>
                             <td class="text-end">
                                 <a href="{{ route('admin.services.menus.index', $service) }}" class="btn btn-sm btn-outline-primary"><i class="fa fa-list"></i> Menus</a>

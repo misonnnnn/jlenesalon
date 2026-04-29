@@ -55,12 +55,14 @@
             color: #201c1c;
         }
         .btn-booking-submit {
-            background-color: #b49d59;
+            /* background-color: #b49d59; */
+            background-color: #000;
             border-color: #b49d59;
             color: #fff;
         }
         .btn-booking-submit:hover {
-            background-color: #9a8548;
+            /* background-color: #9a8548; */
+            background-color: #444;
             border-color: #9a8548;
             color: #fff;
         }

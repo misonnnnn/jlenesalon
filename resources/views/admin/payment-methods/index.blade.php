@@ -42,7 +42,7 @@
                             </td>
                             <td><code>{{ $payment->code }}</code></td>
                             <td>{{ $payment->stripe_method ?: '-' }}</td>
-                            <td>{{ $payment->is_active ? 'Yes' : 'No' }}</td>
+                            <td>{!! $payment->is_active ? '<span class="badge badge-sm rounded-pill badge-soft text-uppercase small text-success">Active</span>' : '<span class="badge badge-sm rounded-pill badge-soft text-uppercase small text-danger">Inactive</span>' !!}</td>
                             <td>{{ $payment->sort_order }}</td>
                             <td class="text-end">
                                 <a href="{{ route('admin.payments.edit', $payment) }}" class="btn btn-sm btn-primary">
