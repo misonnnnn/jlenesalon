@@ -34,6 +34,7 @@
                 <a href="{{ route('admin.services.index') }}" class="btn btn-admin-primary">Manage Services</a>
                 <a href="{{ route('admin.bookings') }}" class="btn btn-outline-secondary">View Bookings</a>
             </div>
+
         </div>
     </div>
 @endsection

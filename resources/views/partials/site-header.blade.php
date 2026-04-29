@@ -1,6 +1,7 @@
 @php
+    $languageSelectorEnabled = \App\Models\SiteSetting::isLanguageSelectorEnabled();
     $isHomeHeader = $isHomeHeader ?? false;
-    $locale = session('site_locale', 'ja');
+    $locale = $languageSelectorEnabled ? session('site_locale', 'ja') : 'en';
     $isJa = $locale === 'ja';
 @endphp
 
@@ -34,12 +35,13 @@
             <li class="nav-item"><a class="nav-link text-white" href="{{ route('bookings.create') }}"><p class="text-white p-0 m-0">予約する</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">BOOK</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
             <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">アクセス</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">ACCESS</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
             <li class="nav-item"><a class="nav-link text-white" href="#"><p class="text-white p-0 m-0">スタッフ</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">STAFF</p></a><hr class="text-light-hr p-0 m-0 d-block d-md-none mx-auto"></li>
-            <li class="nav-item language_switch_item px-4 py-2 ms-1">
-                <a class="nav-link  p-0 {{$locale === 'ja' ? 'fw-bold text-white' : 'text-muted'}}" href="{{ route('language.switch', ['locale' => 'ja']) }}">JA</a>
-                <span class="text-light-muted px-1">|</span>
-                <a class="nav-link  p-0 {{$locale === 'en' ? 'fw-bold text-white' : 'text-muted'}}" href="{{ route('language.switch', ['locale' => 'en']) }}">EN</a>
-
-            </li>
+            @if ($languageSelectorEnabled)
+                <li class="nav-item language_switch_item px-4 py-2 ms-1">
+                    <a class="nav-link  p-0 {{$locale === 'ja' ? 'fw-bold text-white' : 'text-muted'}}" href="{{ route('language.switch', ['locale' => 'ja']) }}">JA</a>
+                    <span class="text-light-muted px-1">|</span>
+                    <a class="nav-link  p-0 {{$locale === 'en' ? 'fw-bold text-white' : 'text-muted'}}" href="{{ route('language.switch', ['locale' => 'en']) }}">EN</a>
+                </li>
+            @endif
             <!-- <li class="nav-item"><a class="nav-link text-white" href="{{ route('admin.login') }}"><p class="text-white p-0 m-0">管理者ログイン</p><p class="p-0 m-0 fs-6 text-light-muted text-center text-uppercase">ADMIN LOGIN</p></a></li> -->
         </ul>
     </div>

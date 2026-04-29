@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 @php
-    $locale = session('site_locale', 'ja');
+    $locale = \App\Models\SiteSetting::isLanguageSelectorEnabled() ? session('site_locale', 'ja') : 'en';
     $isJa = $locale === 'ja';
 @endphp
 <html lang="en">

@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\PaymentMethod;
 use App\Models\Service;
 use App\Models\ServiceMenu;
+use App\Models\SiteSetting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -100,7 +101,9 @@ class BookingController extends Controller
         $checkoutReference = (string) Str::uuid();
         Cache::put($this->checkoutPayloadCacheKey($checkoutReference), $validated, now()->addMinutes(60));
 
-        $locale = session('site_locale', 'ja');
+        $locale = SiteSetting::isLanguageSelectorEnabled()
+            ? session('site_locale', 'ja')
+            : 'en';
         $menuName = $locale === 'ja'
             ? ($menu->title_ja ?: $menu->title_en ?: $menu->title ?: 'Salon booking')
             : ($menu->title_en ?: $menu->title_ja ?: $menu->title ?: 'Salon booking');

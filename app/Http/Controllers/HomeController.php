@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SiteSetting;
 use App\Models\Service;
 use Illuminate\Http\Request;
 
@@ -58,6 +59,12 @@ class HomeController extends Controller
 
     public function setLanguage(Request $request, string $locale)
     {
+        if (!SiteSetting::isLanguageSelectorEnabled()) {
+            $request->session()->put('site_locale', 'en');
+
+            return redirect()->back();
+        }
+
         if (!in_array($locale, self::ALLOWED_LOCALES, true)) {
             $locale = 'ja';
         }

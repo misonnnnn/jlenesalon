@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\AdminPaymentMethodController;
+use App\Http\Controllers\AdminSettingController;
 use App\Http\Controllers\AdminServiceController;
 use App\Http\Controllers\AdminServiceMenuController;
 use App\Http\Controllers\BookingController;
@@ -38,6 +39,8 @@ Route::prefix('admin')->name('admin.')->middleware('guest')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings/language-selector', [AdminSettingController::class, 'updateLanguageSelector'])->name('settings.language-selector');
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings');
     Route::get('/bookings/events', [AdminBookingController::class, 'events'])->name('bookings.events');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
