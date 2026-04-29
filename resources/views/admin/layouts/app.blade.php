@@ -30,6 +30,7 @@
         .admin-shell {
             min-height: 100vh;
             display: flex;
+            position: relative;
         }
         .admin-sidebar {
             width: 250px;
@@ -77,6 +78,20 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 1.5rem;
+        }
+        .admin-sidebar-toggle {
+            display: none;
+            border: 1px solid var(--admin-border);
+            background: #fff;
+            color: var(--admin-text);
+            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+        }
+        .admin-sidebar-overlay {
+            display: none;
         }
         .admin-page {
             padding: 1.5rem;
@@ -144,16 +159,39 @@
                 display: block;
             }
             .admin-sidebar {
+                width: min(82vw, 320px);
+                height: 100vh;
+                position: fixed;
+                left: 0;
+                top: 0;
+                z-index: 1040;
+                transform: translateX(-100%);
+                transition: transform .22s ease;
+            }
+            .admin-main {
                 width: 100%;
-                height: auto;
-                position: static;
+            }
+            .admin-sidebar-toggle {
+                display: inline-flex;
+            }
+            .admin-sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 1030;
+                background: rgba(15, 23, 42, .5);
+            }
+            body.admin-sidebar-open .admin-sidebar {
+                transform: translateX(0);
+            }
+            body.admin-sidebar-open .admin-sidebar-overlay {
+                display: block;
             }
         }
     </style>
 </head>
 <body class="admin-body">
     <div class="admin-shell">
-        <aside class="admin-sidebar">
+        <aside class="admin-sidebar" id="adminSidebar">
             <div class="admin-brand">Jlene Salon Admin</div>
             <nav class="nav flex-column gap-1">
                 <a href="{{ route('admin.dashboard') }}"
@@ -190,6 +228,9 @@
         <main class="admin-main">
             <div class="admin-topbar">
                 <div>
+                    <button class="admin-sidebar-toggle me-2" type="button" id="adminSidebarToggle" aria-label="Open menu">
+                        <i class="fa fa-bars"></i>
+                    </button>
                     <strong>@yield('title', 'Admin Panel')</strong>
                 </div>
                 <div class="admin-muted small">
@@ -205,6 +246,7 @@
             </div>
         </main>
     </div>
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -216,6 +258,39 @@
     <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/fixedColumns.bootstrap5.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            var body = document.body;
+            var sidebarToggle = document.getElementById('adminSidebarToggle');
+            var sidebarOverlay = document.getElementById('adminSidebarOverlay');
+            var sidebar = document.getElementById('adminSidebar');
+            var mobileQuery = window.matchMedia('(max-width: 991px)');
+
+            function closeSidebar() {
+                body.classList.remove('admin-sidebar-open');
+            }
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function () {
+                    body.classList.toggle('admin-sidebar-open');
+                });
+            }
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', closeSidebar);
+            }
+            if (sidebar) {
+                sidebar.querySelectorAll('a').forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        if (mobileQuery.matches) {
+                            closeSidebar();
+                        }
+                    });
+                });
+            }
+            window.addEventListener('resize', function () {
+                if (!mobileQuery.matches) {
+                    closeSidebar();
+                }
+            });
+
             if (typeof window.jQuery === 'undefined' || !jQuery.fn.DataTable) {
                 return;
             }
@@ -223,6 +298,9 @@
             $('.admin-table').each(function () {
                 var $table = $(this);
                 if ($.fn.dataTable.isDataTable($table)) {
+                    return;
+                }
+                if ($table.find('tbody td[colspan]').length > 0) {
                     return;
                 }
 

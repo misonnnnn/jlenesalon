@@ -45,7 +45,7 @@
                             <td>{!! $payment->is_active ? '<span class="badge badge-sm rounded-pill badge-soft text-uppercase small text-success">Active</span>' : '<span class="badge badge-sm rounded-pill badge-soft text-uppercase small text-danger">Inactive</span>' !!}</td>
                             <td>{{ $payment->sort_order }}</td>
                             <td class="text-end">
-                                <a href="{{ route('admin.payments.edit', $payment) }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('admin.payments.edit', $payment) }}" class="btn btn-sm btn-admin-primary">
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </a>
                                 <form action="{{ route('admin.payments.destroy', $payment) }}" method="POST" class="d-inline">
