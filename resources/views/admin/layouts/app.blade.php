@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.bootstrap5.min.css">
     @stack('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -211,6 +212,8 @@
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/fixedColumns.bootstrap5.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (typeof window.jQuery === 'undefined' || !jQuery.fn.DataTable) {
@@ -223,7 +226,7 @@
                     return;
                 }
 
-                $table.DataTable({
+                var dtOptions = {
                     pageLength: 10,
                     lengthMenu: [10, 25, 50, 100],
                     order: [],
@@ -232,7 +235,19 @@
                         search: 'Search:',
                         lengthMenu: 'Show _MENU_ entries',
                     },
-                });
+                };
+
+                if ($table.hasClass('bookings-table')) {
+                    dtOptions.responsive = false;
+                    dtOptions.scrollX = true;
+                    dtOptions.scrollCollapse = true;
+                    dtOptions.autoWidth = false;
+                    dtOptions.fixedColumns = {
+                        leftColumns: 1,
+                    };
+                }
+
+                $table.DataTable(dtOptions);
             });
         });
     </script>

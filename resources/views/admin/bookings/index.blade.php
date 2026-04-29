@@ -17,8 +17,8 @@
                     <p class="admin-muted mb-0">No booking requests yet.</p>
                 </div>
             @else
-                <div class="table-responsive p-3">
-                    <table class="table table-hover mb-0 align-middle admin-table">
+                <div class="p-3">
+                    <table class="table table-hover mb-0 align-middle admin-table bookings-table w-100" style="width: 100%;">
                         <thead>
                             <tr>
                                 <th>When</th>
@@ -37,7 +37,9 @@
                                     $svc = $menu?->service;
                                 @endphp
                                 <tr>
-                                    <td class="text-nowrap">{{ $booking->starts_at->timezone(config('app.timezone'))->format('Y-m-d H:i') }}</td>
+                                    <td class="text-nowrap border-end border-end-2 border-end-primary">
+                                        <span class="fw-semibold text-muted fw-bold">{{ $booking->starts_at->timezone(config('app.timezone'))->format('Y-m-d H:i') }}</span>
+                                    </td>
                                     <td>
                                         <div class="fw-semibold  fw-bold">{{ $svc?->name_en ?? '—' }}</div>
                                         <div class="small admin-muted">{{ $menu?->title_en ?? $menu?->title ?? '—' }}</div>
