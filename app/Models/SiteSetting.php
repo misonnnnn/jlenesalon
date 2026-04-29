@@ -10,6 +10,8 @@ class SiteSetting extends Model
     public const KEY_LANGUAGE_SELECTOR_ENABLED = 'language_selector_enabled';
     public const KEY_ADMIN_BOOKING_ALERT_EMAILS = 'admin_booking_alert_emails';
     public const KEY_CUSTOMER_BOOKING_EMAIL_USE_QUEUE = 'customer_booking_email_use_queue';
+    public const KEY_ADMIN_BOOKING_ALERTS_ENABLED = 'admin_booking_alerts_enabled';
+    public const KEY_CUSTOMER_BOOKING_EMAIL_ENABLED = 'customer_booking_email_enabled';
 
     protected $fillable = [
         'key',
@@ -105,5 +107,25 @@ class SiteSetting extends Model
     public static function shouldQueueCustomerBookingEmail(): bool
     {
         return self::getBool(self::KEY_CUSTOMER_BOOKING_EMAIL_USE_QUEUE, true);
+    }
+
+    public static function setAdminBookingAlertsEnabled(bool $enabled): void
+    {
+        self::putBool(self::KEY_ADMIN_BOOKING_ALERTS_ENABLED, $enabled);
+    }
+
+    public static function isAdminBookingAlertsEnabled(): bool
+    {
+        return self::getBool(self::KEY_ADMIN_BOOKING_ALERTS_ENABLED, true);
+    }
+
+    public static function setCustomerBookingEmailEnabled(bool $enabled): void
+    {
+        self::putBool(self::KEY_CUSTOMER_BOOKING_EMAIL_ENABLED, $enabled);
+    }
+
+    public static function isCustomerBookingEmailEnabled(): bool
+    {
+        return self::getBool(self::KEY_CUSTOMER_BOOKING_EMAIL_ENABLED, true);
     }
 }

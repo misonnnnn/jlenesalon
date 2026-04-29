@@ -284,20 +284,26 @@ class BookingController extends Controller
 
         $booking->loadMissing('menu.service');
 
-        try {
-            $customerMail = new CustomerBookingConfirmationMail($booking);
-            if (SiteSetting::shouldQueueCustomerBookingEmail()) {
-                Mail::to($booking->customer_email)->queue($customerMail);
-            } else {
-                Mail::to($booking->customer_email)->send($customerMail);
+        if (SiteSetting::isCustomerBookingEmailEnabled()) {
+            try {
+                $customerMail = new CustomerBookingConfirmationMail($booking);
+                if (SiteSetting::shouldQueueCustomerBookingEmail()) {
+                    Mail::to($booking->customer_email)->queue($customerMail);
+                } else {
+                    Mail::to($booking->customer_email)->send($customerMail);
+                }
+            } catch (\Throwable $e) {
+                Log::error('Sending customer booking confirmation failed.', [
+                    'booking_id' => $booking->id,
+                    'customer_email' => $booking->customer_email,
+                    'queue_enabled' => SiteSetting::shouldQueueCustomerBookingEmail(),
+                    'message' => $e->getMessage(),
+                ]);
             }
-        } catch (\Throwable $e) {
-            Log::error('Sending customer booking confirmation failed.', [
-                'booking_id' => $booking->id,
-                'customer_email' => $booking->customer_email,
-                'queue_enabled' => SiteSetting::shouldQueueCustomerBookingEmail(),
-                'message' => $e->getMessage(),
-            ]);
+        }
+
+        if (!SiteSetting::isAdminBookingAlertsEnabled()) {
+            return;
         }
 
         $adminEmails = SiteSetting::getAdminBookingAlertEmails();

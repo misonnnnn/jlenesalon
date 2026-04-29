@@ -53,6 +53,36 @@
                         class="form-check-input"
                         type="checkbox"
                         role="switch"
+                        id="admin_booking_alerts_enabled"
+                        name="admin_booking_alerts_enabled"
+                        value="1"
+                        @checked(old('admin_booking_alerts_enabled', $adminBookingAlertsEnabled))
+                    >
+                    <label class="form-check-label" for="admin_booking_alerts_enabled">
+                        Enable admin booking email alerts
+                    </label>
+                </div>
+
+                <div class="form-check form-switch mt-3">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="customer_booking_email_enabled"
+                        name="customer_booking_email_enabled"
+                        value="1"
+                        @checked(old('customer_booking_email_enabled', $customerBookingEmailEnabled))
+                    >
+                    <label class="form-check-label" for="customer_booking_email_enabled">
+                        Enable customer booking email notifications
+                    </label>
+                </div>
+
+                <div class="form-check form-switch mt-3">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
                         id="customer_booking_email_use_queue"
                         name="customer_booking_email_use_queue"
                         value="1"
@@ -64,7 +94,8 @@
                 </div>
 
                 <p class="text-muted small mt-2 mb-3">
-                    When enabled, customer confirmations are queued (recommended). Disable only as a temporary fallback if queue processing is unavailable.
+                    Use the two toggles above to enable/disable admin and customer notifications independently.
+                    Queue is only used when customer notifications are enabled.
                 </p>
                 <button type="submit" class="btn btn-admin-primary btn-sm">Save setting</button>
             </form>
@@ -89,10 +120,14 @@
                 @enderror
 
                 <p class="text-muted small mt-2 mb-3">
-                    @if ($customerBookingEmailUseQueue)
-                        Queue is enabled: keep queue worker running to deliver customer test emails.
+                    @if (!$customerBookingEmailEnabled && !$adminBookingAlertsEnabled)
+                        Both admin and customer notifications are currently disabled.
+                    @elseif ($customerBookingEmailEnabled && $customerBookingEmailUseQueue)
+                        Customer notifications are enabled with queue: keep queue worker running for customer test emails.
+                    @elseif ($customerBookingEmailEnabled)
+                        Customer notifications are enabled and set to immediate sending.
                     @else
-                        Queue is disabled: customer test email will be sent immediately.
+                        Customer notifications are disabled; test send will target admin only.
                     @endif
                 </p>
                 <button type="submit" class="btn btn-admin-primary btn-sm">Send test notifications</button>

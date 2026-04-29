@@ -21,6 +21,8 @@ class AdminSettingController extends Controller
             'languageSelectorEnabled' => SiteSetting::isLanguageSelectorEnabled(),
             'adminBookingAlertEmails' => SiteSetting::getAdminBookingAlertEmailsRaw(),
             'customerBookingEmailUseQueue' => SiteSetting::shouldQueueCustomerBookingEmail(),
+            'adminBookingAlertsEnabled' => SiteSetting::isAdminBookingAlertsEnabled(),
+            'customerBookingEmailEnabled' => SiteSetting::isCustomerBookingEmailEnabled(),
         ]);
     }
 
@@ -38,6 +40,8 @@ class AdminSettingController extends Controller
         $validated = $request->validate([
             'admin_booking_alert_emails' => ['nullable', 'string', 'max:2000'],
             'customer_booking_email_use_queue' => ['nullable', 'boolean'],
+            'admin_booking_alerts_enabled' => ['nullable', 'boolean'],
+            'customer_booking_email_enabled' => ['nullable', 'boolean'],
         ]);
 
         $raw = trim((string) ($validated['admin_booking_alert_emails'] ?? ''));
@@ -56,6 +60,8 @@ class AdminSettingController extends Controller
 
         SiteSetting::setAdminBookingAlertEmails($emails->implode(', '));
         SiteSetting::setCustomerBookingEmailUseQueue($request->boolean('customer_booking_email_use_queue'));
+        SiteSetting::setAdminBookingAlertsEnabled($request->boolean('admin_booking_alerts_enabled'));
+        SiteSetting::setCustomerBookingEmailEnabled($request->boolean('customer_booking_email_enabled'));
 
         return redirect()
             ->route('admin.settings.index')
@@ -68,8 +74,20 @@ class AdminSettingController extends Controller
             'test_customer_email' => ['required', 'email', 'max:255'],
         ]);
 
+        $adminEnabled = SiteSetting::isAdminBookingAlertsEnabled();
+        $customerEnabled = SiteSetting::isCustomerBookingEmailEnabled();
+        $queueEnabled = SiteSetting::shouldQueueCustomerBookingEmail();
+
+        if (!$adminEnabled && !$customerEnabled) {
+            return redirect()
+                ->route('admin.settings.index')
+                ->withErrors([
+                    'test_customer_email' => 'Both admin and customer notifications are disabled.',
+                ])->withInput();
+        }
+
         $adminEmails = SiteSetting::getAdminBookingAlertEmails();
-        if ($adminEmails === []) {
+        if ($adminEnabled && $adminEmails === []) {
             return redirect()
                 ->route('admin.settings.index')
                 ->withErrors([
@@ -80,12 +98,17 @@ class AdminSettingController extends Controller
         $booking = $this->buildSampleBookingForEmail($validated['test_customer_email']);
 
         try {
-            Mail::to($adminEmails)->send(new AdminBookingAlertMail($booking));
-            $testCustomerMail = new TestCustomerBookingConfirmationMail($validated['test_customer_email']);
-            if (SiteSetting::shouldQueueCustomerBookingEmail()) {
-                Mail::to($validated['test_customer_email'])->queue($testCustomerMail);
-            } else {
-                Mail::to($validated['test_customer_email'])->send($testCustomerMail);
+            if ($adminEnabled) {
+                Mail::to($adminEmails)->send(new AdminBookingAlertMail($booking));
+            }
+
+            if ($customerEnabled) {
+                $testCustomerMail = new TestCustomerBookingConfirmationMail($validated['test_customer_email']);
+                if ($queueEnabled) {
+                    Mail::to($validated['test_customer_email'])->queue($testCustomerMail);
+                } else {
+                    Mail::to($validated['test_customer_email'])->send($testCustomerMail);
+                }
             }
         } catch (\Throwable $e) {
             Log::error('Failed to send test booking notifications from settings.', [
@@ -103,12 +126,24 @@ class AdminSettingController extends Controller
 
         return redirect()
             ->route('admin.settings.index')
-            ->with(
-                'status',
-                SiteSetting::shouldQueueCustomerBookingEmail()
-                    ? 'Test notifications sent: admin immediate and customer queued.'
-                    : 'Test notifications sent: admin immediate and customer sent immediately (queue disabled).'
-            );
+            ->with('status', $this->buildTestNotificationStatusMessage($adminEnabled, $customerEnabled, $queueEnabled));
+    }
+
+    private function buildTestNotificationStatusMessage(bool $adminEnabled, bool $customerEnabled, bool $queueEnabled): string
+    {
+        if ($adminEnabled && $customerEnabled) {
+            return $queueEnabled
+                ? 'Test notifications sent: admin immediate and customer queued.'
+                : 'Test notifications sent: admin immediate and customer sent immediately (queue disabled).';
+        }
+
+        if ($adminEnabled) {
+            return 'Test notification sent to admin only (customer notifications are disabled).';
+        }
+
+        return $queueEnabled
+            ? 'Test notification sent to customer only (queued). Admin notifications are disabled.'
+            : 'Test notification sent to customer only (immediate). Admin notifications are disabled.';
     }
 
     private function buildSampleBookingForEmail(string $testCustomerEmail): Booking
