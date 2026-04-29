@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookingRequest;
+use App\Mail\AdminBookingAlertMail;
+use App\Mail\CustomerBookingConfirmationMail;
 use App\Models\Booking;
 use App\Models\PaymentMethod;
 use App\Models\Service;
@@ -14,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use JsonException;
 use Stripe\Checkout\Session;
@@ -263,7 +266,7 @@ class BookingController extends Controller
             return;
         }
 
-        Booking::create([
+        $booking = Booking::create([
             'service_menu_id' => $payload['service_menu_id'],
             'customer_name' => $payload['customer_name'],
             'customer_email' => $payload['customer_email'],
@@ -278,6 +281,39 @@ class BookingController extends Controller
             'stripe_checkout_session_id' => $checkoutSessionId,
             'stripe_payment_intent_id' => (string) ($stripeSession->payment_intent ?? ''),
         ]);
+
+        $booking->loadMissing('menu.service');
+
+        try {
+            $customerMail = new CustomerBookingConfirmationMail($booking);
+            if (SiteSetting::shouldQueueCustomerBookingEmail()) {
+                Mail::to($booking->customer_email)->queue($customerMail);
+            } else {
+                Mail::to($booking->customer_email)->send($customerMail);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Sending customer booking confirmation failed.', [
+                'booking_id' => $booking->id,
+                'customer_email' => $booking->customer_email,
+                'queue_enabled' => SiteSetting::shouldQueueCustomerBookingEmail(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        $adminEmails = SiteSetting::getAdminBookingAlertEmails();
+        if ($adminEmails === []) {
+            return;
+        }
+
+        try {
+            Mail::to($adminEmails)->send(new AdminBookingAlertMail($booking));
+        } catch (\Throwable $e) {
+            Log::error('Sending admin booking alert failed.', [
+                'booking_id' => $booking->id,
+                'admin_emails' => $adminEmails,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     private function checkoutPayloadCacheKey(string $reference): string

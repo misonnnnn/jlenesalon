@@ -41,6 +41,8 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
     Route::post('/settings/language-selector', [AdminSettingController::class, 'updateLanguageSelector'])->name('settings.language-selector');
+    Route::post('/settings/booking-notifications', [AdminSettingController::class, 'updateBookingNotifications'])->name('settings.booking-notifications');
+    Route::post('/settings/booking-notifications/test', [AdminSettingController::class, 'sendTestBookingNotifications'])->name('settings.booking-notifications.test');
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings');
     Route::get('/bookings/events', [AdminBookingController::class, 'events'])->name('bookings.events');
     Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->whereNumber('booking')->name('bookings.show');
